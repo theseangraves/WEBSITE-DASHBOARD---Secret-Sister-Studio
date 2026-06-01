@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secret Sister Studio</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f0ede8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;font-size:13px;color:#1a1a1a;min-height:100vh}
+header{background:#fff;border-bottom:1px solid #ddd;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+header h1{font-family:'Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-size:15px;color:#111}
+.hright{display:flex;align-items:center;gap:12px}
+.hdate{font-size:11px;color:#888}
+.sync-btn{font-size:11px;font-weight:600;background:transparent;border:1px solid #ccc;border-radius:3px;padding:4px 10px;cursor:pointer;color:#555;font-family:inherit}
+.sync-btn:hover{background:#f5f5f5}
+.sync-status{font-size:10px;color:#aaa}
+.gcal-btn{font-size:11px;font-weight:600;background:#4285f4;color:#fff;border:none;border-radius:3px;padding:4px 10px;cursor:pointer;font-family:inherit}
+.gcal-btn:hover{background:#3574e2}
+.wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px;max-width:1600px;margin:0 auto}
+.panel{background:#fff;border:1px solid #ddd;border-radius:6px;overflow:hidden}
+.panel.full{grid-column:1/-1}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid #eee;background:#faf9f7}
+.pt{font-family:'Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:10px;color:#555}
+.badd{font-size:11px;font-weight:600;background:#1a1a1a;color:#fff;border:none;border-radius:3px;padding:4px 10px;cursor:pointer;font-family:inherit}
+.badd:hover{background:#333}
+.bsm{font-size:10px;font-weight:500;background:transparent;border:1px solid #ccc;border-radius:3px;padding:2px 7px;cursor:pointer;color:#555;font-family:inherit}
+.bsm:hover{background:#f5f5f5}
+.bdel{color:#b03030;border-color:#e0b0b0}
+.crow{display:grid;grid-template-columns:18px 1fr 54px 60px 50px 60px 36px 28px;gap:7px;align-items:center;padding:7px 14px;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.crow:hover{background:#faf9f7}
+.crow:last-child{border-bottom:none}
+.chdr{background:#f7f6f4;cursor:default;padding:5px 14px}
+.chdr:hover{background:#f7f6f4}
+.rank{font-size:11px;color:#aaa;font-weight:700}
+.cname{font-size:13px;font-weight:600;color:#111}
+.csub{font-size:11px;color:#888;margin-top:1px}
+.clbl{font-size:10px;font-weight:700;color:#999;letter-spacing:0.06em;text-transform:uppercase}
+.ubadge{font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px;text-align:center}
+.uhot{background:#fde8e7;color:#992020}
+.uwarm{background:#fef3de;color:#8a5200}
+.ucool{background:#e6f4e6;color:#255525}
+.stag{font-size:10px;padding:2px 5px;border-radius:3px;background:#f0ede8;color:#555;font-weight:600;text-align:center}
+.dtag{font-size:11px;color:#555;font-weight:500}
+.srctag{font-size:11px;font-weight:700;color:#888;text-align:center}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr)}
+.sitem{padding:14px 12px;border-right:1px solid #eee;text-align:center}
+.sitem:last-child{border-right:none}
+.splat{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin-bottom:6px}
+.snum{font-size:20px;font-weight:700;color:#111;cursor:pointer;border-bottom:1px dashed #ccc;display:inline-block}
+.snum:hover{color:#444}
+.slbl{font-size:10px;color:#999;margin-top:3px}
+.dlist{list-style:none}
+.ditem{display:flex;align-items:flex-start;gap:8px;padding:7px 14px;border-bottom:1px solid #f0f0f0;background:#fff}
+.ditem:last-child{border-bottom:none}
+.ditem.dragging{opacity:0.4}
+.ditem.drag-over{border-top:2px solid #1a1a1a}
+.drag-handle{cursor:grab;color:#ccc;font-size:14px;padding-top:1px;flex-shrink:0;user-select:none}
+.drag-handle:active{cursor:grabbing}
+.lnum{min-width:16px;font-size:11px;font-weight:700;color:#bbb;padding-top:1px;flex-shrink:0}
+.ltxt{flex:1;font-size:13px;color:#111;line-height:1.35}
+.lsub{font-size:11px;color:#888;margin-top:1px}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+.team-card{padding:12px 14px;border-right:1px solid #eee;border-bottom:1px solid #eee}
+.team-name{font-size:13px;font-weight:700;color:#111}
+.team-role{font-size:11px;color:#888;margin-top:2px}
+.team-num{font-size:11px;color:#555;margin-top:4px;font-weight:500}
+.team-init{display:inline-block;font-size:10px;font-weight:700;background:#f0ede8;color:#555;padding:1px 6px;border-radius:3px;margin-top:4px}
+.perf-row{display:grid;grid-template-columns:40px 1fr 60px 60px;gap:8px;align-items:center;padding:7px 14px;border-bottom:1px solid #f0f0f0}
+.perf-row:last-child{border-bottom:none}
+.perf-row.phdr{background:#f7f6f4;padding:5px 14px}
+.perf-init{font-size:13px;font-weight:700;color:#111}
+.perf-bar-wrap{height:6px;background:#eee;border-radius:3px;overflow:hidden}
+.perf-bar{height:100%;background:#1a1a1a;border-radius:3px}
+.perf-num{font-size:12px;font-weight:700;color:#111;text-align:center}
+.perf-conf{font-size:11px;color:#255525;font-weight:600;text-align:center}
+.rec-row{display:grid;grid-template-columns:1fr 80px 60px 28px;gap:8px;align-items:center;padding:7px 14px;border-bottom:1px solid #f0f0f0}
+.rec-row:last-child{border-bottom:none}
+.rec-row.rhdr{background:#f7f6f4;padding:5px 14px}
+.rec-name{font-size:13px;font-weight:600;color:#111}
+.rec-sub{font-size:11px;color:#888;margin-top:1px}
+.rec-date{font-size:11px;color:#555}
+.paid-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
+.paid-yes{background:#e6f4e6;color:#255525}
+.paid-no{background:#fde8e7;color:#992020}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid #eee}
+.cal-month{font-size:13px;font-weight:700;color:#111}
+.cal-btn{background:none;border:1px solid #ddd;border-radius:3px;padding:3px 10px;cursor:pointer;font-size:12px;color:#555;font-family:inherit}
+.cal-btn:hover{background:#f5f5f5}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);border-left:1px solid #f0f0f0;border-top:1px solid #f0f0f0}
+.cal-day-hdr{padding:5px 0;text-align:center;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#aaa;border-right:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;background:#faf9f7}
+.cal-cell{min-height:72px;padding:5px 6px;border-right:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0}
+.cal-cell.other-month{background:#faf9f7}
+.cal-date{font-size:11px;font-weight:700;color:#aaa;margin-bottom:3px}
+.cal-cell.today .cal-date{background:#1a1a1a;color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px}
+.cal-event{font-size:10px;font-weight:600;padding:2px 5px;border-radius:3px;margin-bottom:2px;line-height:1.3}
+.ev-studio{background:#1a1a1a;color:#fff}
+.ev-busy{background:#e8e4de;color:#888}
+.cal-legend{display:flex;gap:14px;padding:8px 14px;border-top:1px solid #eee;background:#faf9f7}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:#888}
+.leg-dot{width:10px;height:10px;border-radius:2px}
+.empty{padding:16px 14px;text-align:center;font-size:12px;color:#bbb;font-style:italic}
+.saving{font-size:10px;color:#aaa;padding:4px 14px;text-align:right;border-top:1px solid #f0f0f0}
+.modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:flex-start;justify-content:center;padding-top:60px}
+.modal-wrap.on{display:flex}
+.modal{background:#fff;border-radius:8px;padding:20px;width:440px;max-width:95vw;max-height:85vh;overflow-y:auto}
+.modal h2{font-family:'Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:11px;color:#666;margin-bottom:14px}
+.fr{margin-bottom:10px}
+.fr label{display:block;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:3px}
+.fr input,.fr select,.fr textarea{font-family:inherit;width:100%;padding:7px 9px;border:1px solid #ccc;border-radius:4px;font-size:13px;color:#111;background:#fff}
+.fr textarea{height:60px;resize:vertical}
+.fr-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fa{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
+.bpri{font-family:inherit;font-size:12px;font-weight:600;background:#1a1a1a;color:#fff;border:none;border-radius:4px;padding:7px 16px;cursor:pointer}
+.bcan{font-family:inherit;font-size:12px;font-weight:500;background:transparent;color:#888;border:1px solid #ccc;border-radius:4px;padding:7px 16px;cursor:pointer}
+.toast{position:fixed;bottom:20px;right:20px;background:#1a1a1a;color:#fff;padding:8px 16px;border-radius:4px;font-size:12px;opacity:0;transition:opacity 0.3s;z-index:999;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Secret Sister Studio</h1>
+  <div class="hright">
+    <span class="sync-status" id="sync-status">—</span>
+    <button class="sync-btn" onclick="syncAll()">↻ Sync</button>
+    <button class="gcal-btn" id="gcal-btn" onclick="connectCalendar()" style="display:none">Connect Google Calendar</button>
+    <span class="hdate" id="live-date"></span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- SOCIAL -->
+  <div class="panel full">
+    <div class="ph"><span class="pt">Social Stats</span><span style="font-size:10px;color:#aaa">click to update</span></div>
+    <div class="sgrid">
+      <div class="sitem"><div class="splat">Instagram</div><div class="snum" onclick="openModal('social')" id="stat-ig">—</div><div class="slbl">@secretsisterstudio</div></div>
+      <div class="sitem"><div class="splat">TikTok</div><div class="snum" onclick="openModal('social')" id="stat-tt">—</div><div class="slbl">followers</div></div>
+      <div class="sitem"><div class="splat">YouTube</div><div class="snum" onclick="openModal('social')" id="stat-yt">—</div><div class="slbl">subscribers</div></div>
+      <div class="sitem"><div class="splat">Grouped</div><div class="snum" onclick="openModal('social')" id="stat-gr">—</div><div class="slbl">subscribers</div></div>
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div class="panel">
+    <div class="ph"><span class="pt">Team</span><button class="badd" onclick="openModal('team')">+ Add</button></div>
+    <div id="team-grid" class="team-grid"></div>
+  </div>
+
+  <!-- PERF -->
+  <div class="panel">
+    <div class="ph"><span class="pt">Bookings by Source</span><span style="font-size:10px;color:#aaa">auto from clients</span></div>
+    <div class="perf-row phdr"><span class="clbl">Init</span><span class="clbl">Activity</span><span class="clbl">Total</span><span class="clbl">Confirmed</span></div>
+    <div id="perf-list"></div>
+  </div>
+
+  <!-- RECORDINGS -->
+  <div class="panel">
+    <div class="ph"><span class="pt">Recordings In Progress</span><button class="badd" onclick="openModal('recording')">+ Add</button></div>
+    <div class="rec-row rhdr"><span class="clbl">Project</span><span class="clbl">Started</span><span class="clbl">Paid</span><span></span></div>
+    <div id="rec-list"></div>
+  </div>
+
+  <!-- GROWTH -->
+  <div class="panel">
+    <div class="ph"><span class="pt">Growth Priorities</span><button class="badd" onclick="openModal('growth')">+ Add</button></div>
+    <ul class="dlist" id="list-growth"></ul>
+  </div>
+
+  <!-- FIXES -->
+  <div class="panel">
+    <div class="ph"><span class="pt">Studio Fixes / Upgrades</span><button class="badd" onclick="openModal('fix')">+ Add</button></div>
+    <ul class="dlist" id="list-fix"></ul>
+  </div>
+
+  <!-- INTERN -->
+  <div class="panel">
+    <div class="ph"><span class="pt">Intern Tasks</span><button class="badd" onclick="openModal('intern')">+ Add</button></div>
+    <ul class="dlist" id="list-intern"></ul>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="panel">
+    <div class="ph"><span class="pt">Projects Needing Finish</span><button class="badd" onclick="openModal('project')">+ Add</button></div>
+    <ul class="dlist" id="list-project"></ul>
+  </div>
+
+  <!-- CLIENTS -->
+  <div class="panel full">
+    <div class="ph"><span class="pt">Music Clients</span><button class="badd" onclick="openModal('client')">+ Add Client</button></div>
+    <div class="crow chdr">
+      <span></span><span class="clbl">Client / Project</span><span class="clbl">Urgency</span><span class="clbl">Revenue</span><span class="clbl">Date</span><span class="clbl">Status</span><span class="clbl">Src</span><span></span>
+    </div>
+    <div id="clients-list"></div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="panel full">
+    <div class="ph">
+      <span class="pt">Studio Calendar</span>
+      <div style="display:flex;gap:8px">
+        <button class="badd" onclick="openModal('event')">+ Add Booking</button>
+      </div>
+    </div>
+    <div class="cal-nav">
+      <button class="cal-btn" onclick="shiftMonth(-1)">&#8592;</button>
+      <span class="cal-month" id="cal-title"></span>
+      <button class="cal-btn" onclick="shiftMonth(1)">&#8594;</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend">
+      <div class="leg-item"><div class="leg-dot ev-studio"></div> Studio booking</div>
+      <div class="leg-item"><div class="leg-dot ev-busy"></div> Busy (personal/tattoo)</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-wrap" id="modal-overlay" onclick="closeOuter(event)">
+  <div class="modal" id="modal-box"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const SHEET_ID = '1aDmCVmg4d2uI06AKNXOTRnnDYwQ7LufNLKtOyxSiBXo';
+const API_KEY  = 'AIzaSyCHyILG5iDGVq1XiSh5vgEDFSg3aFx7cfE';
+const CLIENT_ID = '352839982676-j1dvleq0c9sp6opri8r2ih939tnqcbgf.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/calendar.readonly';
+const BASE = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values`;
+
+// ── LOCAL FALLBACK ───────────────────────────────────────────────────────────
+const K={cl:'sss_cl',so:'sss_so',growth:'sss_growth',fix:'sss_fix',intern:'sss_intern',project:'sss_project',team:'sss_team',rec:'sss_rec',events:'sss_events'};
+function lload(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch{return null}}
+function lsave(k,d){try{localStorage.setItem(k,JSON.stringify(d))}catch{}}
+
+// ── SHEETS HELPERS ───────────────────────────────────────────────────────────
+let accessToken = null;
+let sheetReady = false;
+
+async function sheetsGet(range){
+  const url=`${BASE}/${encodeURIComponent(range)}?key=${API_KEY}${accessToken?'':''}`;
+  const headers={'Content-Type':'application/json'};
+  if(accessToken)headers['Authorization']=`Bearer ${accessToken}`;
+  const r=await fetch(url,{headers});
+  if(!r.ok)throw new Error('Sheets read failed');
+  return (await r.json()).values||[];
+}
+
+async function sheetsSet(range,values){
+  if(!accessToken){lsave(range,values);return}
+  const r=await fetch(`${BASE}/${encodeURIComponent(range)}?valueInputOption=RAW`,{
+    method:'PUT',
+    headers:{'Authorization':`Bearer ${accessToken}`,'Content-Type':'application/json'},
+    body:JSON.stringify({values})
+  });
+  if(!r.ok)throw new Error('Sheets write failed');
+}
+
+async function sheetsAppend(range,values){
+  if(!accessToken)return;
+  await fetch(`${BASE}/${encodeURIComponent(range)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,{
+    method:'POST',
+    headers:{'Authorization':`Bearer ${accessToken}`,'Content-Type':'application/json'},
+    body:JSON.stringify({values})
+  });
+}
+
+async function sheetsClear(range){
+  if(!accessToken)return;
+  await fetch(`${BASE}/${encodeURIComponent(range)}:clear`,{
+    method:'POST',
+    headers:{'Authorization':`Bearer ${accessToken}`,'Content-Type':'application/json'}
+  });
+}
+
+// ── GOOGLE AUTH ───────────────────────────────────────────────────────────────
+let tokenClient;
+function initGoogleAuth(){
+  tokenClient=google.accounts.oauth2.initTokenClient({
+    client_id:CLIENT_ID,
+    scope:SCOPES,
+    callback:(resp)=>{
+      if(resp.error)return;
+      accessToken=resp.access_token;
+      document.getElementById('gcal-btn').style.display='none';
+      setSyncStatus('Connected');
+      syncAll();
+    }
+  });
+  document.getElementById('gcal-btn').style.display='inline-block';
+}
+function connectCalendar(){tokenClient.requestAccessToken()}
+
+window.addEventListener('load',()=>{
+  if(typeof google!=='undefined'&&google.accounts){initGoogleAuth()}
+  else{setTimeout(()=>{if(typeof google!=='undefined'&&google.accounts)initGoogleAuth()},2000)}
+});
+
+// ── SYNC ──────────────────────────────────────────────────────────────────────
+const SHEETS_MAP={
+  clients:{sheet:'Clients',local:K.cl},
+  social:{sheet:'Social',local:K.so},
+  growth:{sheet:'Growth',local:K.growth},
+  fix:{sheet:'Fix',local:K.fix},
+  intern:{sheet:'Intern',local:K.intern},
+  project:{sheet:'Projects',local:K.project},
+  team:{sheet:'Team',local:K.team},
+  rec:{sheet:'Recordings',local:K.rec},
+  events:{sheet:'Events',local:K.events},
+};
+
+function setSyncStatus(msg){document.getElementById('sync-status').textContent=msg}
+
+async function syncAll(){
+  if(!accessToken){setSyncStatus('Local only');renderAll();return}
+  setSyncStatus('Syncing…');
+  try{
+    // push all local data to sheets
+    for(const[key,cfg] of Object.entries(SHEETS_MAP)){
+      const data=lload(cfg.local);
+      if(data){
+        await sheetsClear(`${cfg.sheet}!A1:Z1000`);
+        const rows=Array.isArray(data)?data.map(r=>[JSON.stringify(r)]):[[JSON.stringify(data)]];
+        await sheetsSet(`${cfg.sheet}!A1`,rows);
+      }
+    }
+    setSyncStatus('Saved ✓ '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
+    showToast('Synced to Google Sheets');
+  }catch(e){
+    setSyncStatus('Sync error');
+    console.error(e);
+  }
+  renderAll();
+}
+
+async function pushKey(localKey,sheetName){
+  if(!accessToken)return;
+  const data=lload(localKey);
+  if(!data)return;
+  try{
+    await sheetsClear(`${sheetName}!A1:Z1000`);
+    const rows=Array.isArray(data)?data.map(r=>[JSON.stringify(r)]):[[JSON.stringify(data)]];
+    await sheetsSet(`${sheetName}!A1`,rows);
+    setSyncStatus('Saved ✓ '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
+  }catch(e){console.error('Push failed',e)}
+}
+
+async function loadFromSheets(){
+  if(!accessToken)return;
+  for(const[key,cfg] of Object.entries(SHEETS_MAP)){
+    try{
+      const rows=await sheetsGet(`${cfg.sheet}!A1:A1000`);
+      if(rows.length){
+        const parsed=rows.map(r=>{try{return JSON.parse(r[0])}catch{return null}}).filter(Boolean);
+        const val=Array.isArray(lload(cfg.local))?parsed:parsed[0];
+        if(val)lsave(cfg.local,val);
+      }
+    }catch(e){}
+  }
+  renderAll();
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmtDate(iso){if(!iso)return'—';const p=iso.split('-');if(p.length!==3)return iso;return`${parseInt(p[1])}/${parseInt(p[2])}/${p[0].slice(2)}`}
+function fmtSocial(n){if(!n||n==='—'||n==='0')return'—';const num=parseInt(String(n).replace(/[^0-9]/g,''));if(isNaN(num)||num===0)return'—';const r=Math.round(num/10)*10;return r>=1000?r.toLocaleString():String(r)}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+
+// ── INIT DATA ─────────────────────────────────────────────────────────────────
+function initData(){
+  if(!lload(K.cl))lsave(K.cl,[
+    {id:1,name:'The Alley Band',project:'Full Album (2-day)',urgency:'hot',revenue:1800,status:'Confirmed',date:'2026-06-04',notes:'Deposit received',src:'SS'},
+    {id:2,name:'Marco Diaz',project:'Custom Single',urgency:'warm',revenue:450,status:'Inquiring',date:'2026-06-10',notes:'',src:'AB'},
+    {id:3,name:'Private Jam Night',project:'Corporate booking',urgency:'warm',revenue:600,status:'Proposal sent',date:'2026-06-20',notes:'8-person group',src:'SS'},
+    {id:4,name:'Lena Cruz',project:'Half-Day Session',urgency:'cool',revenue:250,status:'Lead',date:'',notes:'',src:'AB'},
+  ]);
+  if(!lload(K.so))lsave(K.so,{ig:'5430',tt:'0',yt:'0',gr:'0'});
+  if(!lload(K.team))lsave(K.team,[
+    {id:1,name:'S.',role:'Owner / Engineer',num:'',init:'SS'},
+    {id:2,name:'Alexander Beys',role:'Bookings / A&R',num:'',init:'AB'},
+  ]);
+  if(!lload(K.rec))lsave(K.rec,[
+    {id:1,name:'The Alley Band — Album',sub:'Live session, 12 tracks',started:'2026-05-15',paid:true},
+    {id:2,name:'Suede Silver — EP',sub:'3 songs in progress',started:'2026-04-20',paid:false},
+  ]);
+  if(!lload(K.events))lsave(K.events,[
+    {id:1,date:'2026-06-04',title:'The Alley Band — Album',type:'studio'},
+    {id:2,date:'2026-06-05',title:'The Alley Band — Album',type:'studio'},
+    {id:3,date:'2026-06-10',title:'Marco Diaz',type:'studio'},
+    {id:4,date:'2026-06-14',title:'',type:'busy'},
+    {id:5,date:'2026-06-20',title:'Private Jam Night',type:'studio'},
+  ]);
+  if(!lload(K.growth))lsave(K.growth,[
+    {id:1,text:'Get Grouped page live + post first jam content',sub:'Subscriber revenue funnel'},
+    {id:2,text:'Close first label / management booking',sub:'Target $1.5K+ single session'},
+    {id:3,text:'Warm Audio brand partnership pitch',sub:'WA-Bus-Comp barter or loan'},
+    {id:4,text:'Drive website bookings from Instagram',sub:'450K reach → 0 conversions is the gap'},
+    {id:5,text:'Get studio insurance in place',sub:'Inland marine + general liability'},
+  ]);
+  if(!lload(K.fix))lsave(K.fix,[
+    {id:1,text:'Stereo bus compressor — WA-Bus-Comp',sub:'Biggest missing signal chain piece'},
+    {id:2,text:'Mic preamp — WA273 or API 3124',sub:'Next most impactful analog add'},
+    {id:3,text:'Roland JC-120 reverb repair',sub:'Currently non-functional'},
+    {id:4,text:'Spring Verb DIY — finish build',sub:'Belton BTDR-2H + Accutronics tank'},
+    {id:5,text:'Vintage keyboard — CP-30 or SK-15',sub:'Replace non-functional spinet'},
+  ]);
+  if(!lload(K.intern))lsave(K.intern,[
+    {id:1,text:'Edit + upload latest jam night video',sub:'Post within 24hrs of session'},
+    {id:2,text:'Update Grouped page with new content',sub:'Weekly cadence'},
+    {id:3,text:'Pull and log gear serial numbers for insurance',sub:'Photos + spreadsheet'},
+  ]);
+  if(!lload(K.project))lsave(K.project,[
+    {id:1,text:'Website launch',sub:'In designer handoff — needs final review'},
+    {id:2,text:'Grouped community page',sub:'Needs signup + first content post'},
+    {id:3,text:'Spring Verb build',sub:'PDF guide done — physical build pending'},
+    {id:4,text:'Suede Silver single',sub:'Recording underway'},
+  ]);
+}
+
+// ── CALENDAR ──────────────────────────────────────────────────────────────────
+let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function shiftMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}renderCal()}
+
+function renderCal(){
+  document.getElementById('cal-title').textContent=`${MONTHS[calMonth]} ${calYear}`;
+  const events=lload(K.events)||[];
+  const today=new Date();
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const daysInPrev=new Date(calYear,calMonth,0).getDate();
+  const grid=document.getElementById('cal-grid');
+  let html=DAYS.map(d=>`<div class="cal-day-hdr">${d}</div>`).join('');
+  for(let i=firstDay-1;i>=0;i--)html+=`<div class="cal-cell other-month"><div class="cal-date">${daysInPrev-i}</div></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===d;
+    const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayEvents=events.filter(e=>e.date===dateStr);
+    const dateDisp=isToday?`<div class="cal-date" style="background:#1a1a1a;color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px">${d}</div>`:`<div class="cal-date">${d}</div>`;
+    const evHtml=dayEvents.map(e=>e.type==='studio'?`<div class="cal-event ev-studio">${esc(e.title.length>16?e.title.slice(0,14)+'…':e.title)}</div>`:`<div class="cal-event ev-busy">Busy</div>`).join('');
+    html+=`<div class="cal-cell${isToday?' today':''}">${dateDisp}${evHtml}</div>`;
+  }
+  const totalCells=firstDay+daysInMonth;
+  const remaining=(7-totalCells%7)%7;
+  for(let i=1;i<=remaining;i++)html+=`<div class="cal-cell other-month"><div class="cal-date">${i}</div></div>`;
+  grid.innerHTML=html;
+}
+
+// ── RENDERS ───────────────────────────────────────────────────────────────────
+function uClass(u){return u==='hot'?'uhot':u==='warm'?'uwarm':'ucool'}
+function uLabel(u){return u==='hot'?'HOT':u==='warm'?'WARM':'COOL'}
+
+function renderClients(){
+  const cl=lload(K.cl)||[];
+  const s=[...cl].sort((a,b)=>({hot:0,warm:1,cool:2}[a.urgency]||2)-({hot:0,warm:1,cool:2}[b.urgency]||2));
+  const el=document.getElementById('clients-list');
+  if(!s.length){el.innerHTML='<div class="empty">No clients yet</div>';return}
+  el.innerHTML=s.map((c,i)=>`
+    <div class="crow" onclick="editClient(${c.id})">
+      <span class="rank">${i+1}</span>
+      <div><div class="cname">${esc(c.name)}</div><div class="csub">${esc(c.project)}</div>${c.notes?`<div class="csub">${esc(c.notes)}</div>`:''}</div>
+      <span class="ubadge ${uClass(c.urgency)}">${uLabel(c.urgency)}</span>
+      <span style="font-size:13px;font-weight:700">$${Number(c.revenue).toLocaleString()}</span>
+      <span class="dtag">${fmtDate(c.date)}</span>
+      <span class="stag">${esc(c.status)}</span>
+      <span class="srctag">${esc(c.src||'—')}</span>
+      <button class="bsm bdel" onclick="delClient(event,${c.id})">✕</button>
+    </div>`).join('');
+  renderPerf();
+}
+
+function renderSocial(){
+  const s=lload(K.so)||{};
+  ['ig','tt','yt','gr'].forEach(k=>{const el=document.getElementById('stat-'+k);if(el)el.textContent=fmtSocial(s[k])});
+}
+
+function renderTeam(){
+  const team=lload(K.team)||[];
+  const el=document.getElementById('team-grid');
+  if(!team.length){el.innerHTML='<div class="empty">No team members</div>';return}
+  el.innerHTML=team.map(m=>`
+    <div class="team-card">
+      <div class="team-name">${esc(m.name)}</div>
+      <div class="team-role">${esc(m.role)}</div>
+      ${m.num?`<div class="team-num">${esc(m.num)}</div>`:''}
+      <div><span class="team-init">${esc(m.init)}</span></div>
+      <button class="bsm bdel" style="margin-top:6px" onclick="delTeam(event,${m.id})">Remove</button>
+    </div>`).join('');
+}
+
+function renderPerf(){
+  const cl=lload(K.cl)||[];
+  const counts={};
+  cl.forEach(c=>{const s=c.src||'?';if(!counts[s])counts[s]={total:0,confirmed:0};counts[s].total++;if(['Confirmed','In progress','Complete'].includes(c.status))counts[s].confirmed++});
+  const el=document.getElementById('perf-list');
+  const entries=Object.entries(counts).sort((a,b)=>b[1].total-a[1].total);
+  if(!entries.length){el.innerHTML='<div class="empty">Auto-fills from client source column</div>';return}
+  const max=Math.max(...entries.map(e=>e[1].total),1);
+  el.innerHTML=entries.map(([init,v])=>`
+    <div class="perf-row">
+      <span class="perf-init">${esc(init)}</span>
+      <div class="perf-bar-wrap"><div class="perf-bar" style="width:${Math.round(v.total/max*100)}%"></div></div>
+      <span class="perf-num">${v.total}</span>
+      <span class="perf-conf">${v.confirmed} booked</span>
+    </div>`).join('');
+}
+
+function renderRecordings(){
+  const recs=(lload(K.rec)||[]).sort((a,b)=>new Date(a.started)-new Date(b.started));
+  const el=document.getElementById('rec-list');
+  if(!recs.length){el.innerHTML='<div class="empty">No recordings tracked</div>';return}
+  el.innerHTML=recs.map(r=>`
+    <div class="rec-row">
+      <div><div class="rec-name">${esc(r.name)}</div>${r.sub?`<div class="rec-sub">${esc(r.sub)}</div>`:''}</div>
+      <span class="rec-date">${fmtDate(r.started)}</span>
+      <span class="paid-badge ${r.paid?'paid-yes':'paid-no'}">${r.paid?'PAID':'UNPAID'}</span>
+      <button class="bsm bdel" onclick="delRec(event,${r.id})">✕</button>
+    </div>`).join('');
+}
+
+function renderDList(key,elId){
+  const items=lload(key)||[];
+  const el=document.getElementById(elId);
+  if(!items.length){el.innerHTML='<li class="empty">Nothing here yet</li>';return}
+  el.innerHTML=items.map((item,i)=>`
+    <li class="ditem" draggable="true" data-id="${item.id}">
+      <span class="drag-handle">⠿</span>
+      <span class="lnum">${i+1}</span>
+      <div class="ltxt">${esc(item.text)}${item.sub?`<div class="lsub">${esc(item.sub)}</div>`:''}</div>
+      <button class="bsm bdel" onclick="delItem(event,'${key}',${item.id},'${elId}')">✕</button>
+    </li>`).join('');
+  attachDrag(el,key,elId);
+}
+
+function renderAll(){
+  renderCal();renderClients();renderSocial();renderTeam();renderRecordings();
+  renderDList(K.growth,'list-growth');
+  renderDList(K.fix,'list-fix');
+  renderDList(K.intern,'list-intern');
+  renderDList(K.project,'list-project');
+}
+
+// ── DRAG ──────────────────────────────────────────────────────────────────────
+let dragSrc=null;
+function attachDrag(ul,key,elId){
+  ul.querySelectorAll('.ditem').forEach(item=>{
+    item.addEventListener('dragstart',e=>{dragSrc=item;e.dataTransfer.effectAllowed='move';setTimeout(()=>item.classList.add('dragging'),0)});
+    item.addEventListener('dragend',()=>{item.classList.remove('dragging');ul.querySelectorAll('.ditem').forEach(i=>i.classList.remove('drag-over'))});
+    item.addEventListener('dragover',e=>{e.preventDefault();ul.querySelectorAll('.ditem').forEach(i=>i.classList.remove('drag-over'));if(item!==dragSrc)item.classList.add('drag-over')});
+    item.addEventListener('drop',e=>{
+      e.preventDefault();if(!dragSrc||dragSrc===item)return;
+      const items=lload(key)||[];
+      const si=items.findIndex(x=>x.id===parseInt(dragSrc.dataset.id));
+      const ti=items.findIndex(x=>x.id===parseInt(item.dataset.id));
+      const[moved]=items.splice(si,1);items.splice(ti,0,moved);
+      lsave(key,items);renderDList(key,elId);
+      pushKey(key,SHEETS_MAP[Object.keys(SHEETS_MAP).find(k=>SHEETS_MAP[k].local===key)]?.sheet||'');
+    });
+  });
+}
+
+// ── DELETE ────────────────────────────────────────────────────────────────────
+function delClient(e,id){e.stopPropagation();if(!confirm('Remove?'))return;const d=(lload(K.cl)||[]).filter(x=>x.id!==id);lsave(K.cl,d);renderClients();pushKey(K.cl,'Clients')}
+function delTeam(e,id){e.stopPropagation();if(!confirm('Remove?'))return;const d=(lload(K.team)||[]).filter(x=>x.id!==id);lsave(K.team,d);renderTeam();pushKey(K.team,'Team')}
+function delRec(e,id){e.stopPropagation();if(!confirm('Remove?'))return;const d=(lload(K.rec)||[]).filter(x=>x.id!==id);lsave(K.rec,d);renderRecordings();pushKey(K.rec,'Recordings')}
+function delItem(e,key,id,elId){e.stopPropagation();if(!confirm('Remove?'))return;const d=(lload(key)||[]).filter(x=>x.id!==id);lsave(key,d);renderDList(key,elId);const sn=Object.values(SHEETS_MAP).find(v=>v.local===key)?.sheet||'';pushKey(key,sn)}
+function editClient(id){const c=(lload(K.cl)||[]).find(x=>x.id===id);if(c)openModal('client',c)}
+function getTeamInits(){return(lload(K.team)||[]).map(m=>m.init).filter(Boolean)}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(type,editData=null){
+  const box=document.getElementById('modal-box');
+  document.getElementById('modal-overlay').classList.add('on');
+  const inits=getTeamInits();
+  if(type==='client'){
+    const c=editData||{};
+    const initOpts=inits.length?inits.map(i=>`<option value="${esc(i)}" ${c.src===i?'selected':''}>${esc(i)}</option>`).join(''):'<option>SS</option>';
+    box.innerHTML=`<h2>${c.id?'Edit':'Add'} Client</h2>
+      <div class="fr"><label>Name</label><input id="f-name" value="${esc(c.name||'')}"></div>
+      <div class="fr"><label>Project Type</label><input id="f-proj" value="${esc(c.project||'')}"></div>
+      <div class="fr-row">
+        <div class="fr"><label>Urgency</label><select id="f-urg">
+          <option value="hot" ${c.urgency==='hot'?'selected':''}>HOT — this week</option>
+          <option value="warm" ${c.urgency==='warm'?'selected':''}>WARM — this month</option>
+          <option value="cool" ${c.urgency==='cool'?'selected':''}>COOL — no rush</option>
+        </select></div>
+        <div class="fr"><label>Source</label><select id="f-src">${initOpts}</select></div>
+      </div>
+      <div class="fr-row">
+        <div class="fr"><label>Est. Revenue ($)</label><input id="f-rev" type="number" value="${c.revenue||''}"></div>
+        <div class="fr"><label>Session Date</label><input id="f-date" type="date" value="${c.date||''}"></div>
+      </div>
+      <div class="fr"><label>Status</label><select id="f-stat">${['Lead','Inquiring','Proposal sent','Confirmed','In progress','Invoiced','Complete'].map(s=>`<option ${c.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+      <div class="fr"><label>Notes</label><textarea id="f-notes">${esc(c.notes||'')}</textarea></div>
+      <div class="fa"><button class="bcan" onclick="closeModal()">Cancel</button><button class="bpri" onclick="saveClient(${c.id||''})">Save</button></div>`;
+  } else if(type==='event'){
+    box.innerHTML=`<h2>Add Calendar Event</h2>
+      <div class="fr"><label>Type</label><select id="f-etype"><option value="studio">Studio Booking</option><option value="busy">Busy (no details)</option></select></div>
+      <div class="fr"><label>Title (studio only)</label><input id="f-etitle"></div>
+      <div class="fr-row">
+        <div class="fr"><label>Date</label><input id="f-edate" type="date"></div>
+        <div class="fr"><label>End Date (multi-day)</label><input id="f-edate2" type="date"></div>
+      </div>
+      <div class="fa"><button class="bcan" onclick="closeModal()">Cancel</button><button class="bpri" onclick="saveEvent()">Save</button></div>`;
+  } else if(type==='team'){
+    box.innerHTML=`<h2>Add Team Member</h2>
+      <div class="fr"><label>Name</label><input id="f-name"></div>
+      <div class="fr"><label>Role</label><input id="f-role"></div>
+      <div class="fr-row">
+        <div class="fr"><label>Phone</label><input id="f-num"></div>
+        <div class="fr"><label>Initials tag</label><input id="f-init" maxlength="4" placeholder="e.g. AB"></div>
+      </div>
+      <div class="fa"><button class="bcan" onclick="closeModal()">Cancel</button><button class="bpri" onclick="saveTeam()">Save</button></div>`;
+  } else if(type==='recording'){
+    box.innerHTML=`<h2>Add Recording</h2>
+      <div class="fr"><label>Project Name</label><input id="f-name"></div>
+      <div class="fr"><label>Details</label><input id="f-sub"></div>
+      <div class="fr-row">
+        <div class="fr"><label>Date Started</label><input id="f-started" type="date"></div>
+        <div class="fr"><label>Paid?</label><select id="f-paid"><option value="1">Paid</option><option value="0">Unpaid</option></select></div>
+      </div>
+      <div class="fa"><button class="bcan" onclick="closeModal()">Cancel</button><button class="bpri" onclick="saveRecording()">Save</button></div>`;
+  } else if(['growth','fix','intern','project'].includes(type)){
+    const labels={growth:'Growth Priority',fix:'Fix / Upgrade',intern:'Intern Task',project:'Project'};
+    box.innerHTML=`<h2>Add ${labels[type]}</h2>
+      <div class="fr"><label>Task</label><input id="f-text"></div>
+      <div class="fr"><label>Context / Notes</label><input id="f-sub"></div>
+      <div class="fa"><button class="bcan" onclick="closeModal()">Cancel</button><button class="bpri" onclick="saveItem('${K[type]}','list-${type}')">Save</button></div>`;
+  } else if(type==='social'){
+    const s=lload(K.so)||{};
+    box.innerHTML=`<h2>Update Social Stats</h2>
+      <div class="fr"><label>Instagram</label><input id="f-ig" value="${esc(s.ig||'')}"></div>
+      <div class="fr"><label>TikTok</label><input id="f-tt" value="${esc(s.tt||'')}"></div>
+      <div class="fr"><label>YouTube</label><input id="f-yt" value="${esc(s.yt||'')}"></div>
+      <div class="fr"><label>Grouped</label><input id="f-gr" value="${esc(s.gr||'')}"></div>
+      <div class="fa"><button class="bcan" onclick="closeModal()">Cancel</button><button class="bpri" onclick="saveSocial()">Save</button></div>`;
+  }
+}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('on')}
+function closeOuter(e){if(e.target.id==='modal-overlay')closeModal()}
+
+// ── SAVES ─────────────────────────────────────────────────────────────────────
+function saveClient(id){
+  const cl=lload(K.cl)||[];
+  const d={id:id||Date.now(),name:document.getElementById('f-name').value.trim(),project:document.getElementById('f-proj').value.trim(),urgency:document.getElementById('f-urg').value,revenue:parseFloat(document.getElementById('f-rev').value)||0,status:document.getElementById('f-stat').value,date:document.getElementById('f-date').value,notes:document.getElementById('f-notes').value.trim(),src:document.getElementById('f-src').value.trim()};
+  if(!d.name)return;
+  if(id){const i=cl.findIndex(c=>c.id===id);if(i>=0)cl[i]=d;else cl.push(d)}else cl.push(d);
+  lsave(K.cl,cl);closeModal();renderClients();pushKey(K.cl,'Clients');showToast('Client saved');
+}
+function saveEvent(){
+  const events=lload(K.events)||[];
+  const type=document.getElementById('f-etype').value;
+  const title=document.getElementById('f-etitle').value.trim();
+  const date1=document.getElementById('f-edate').value;
+  const date2=document.getElementById('f-edate2').value;
+  if(!date1)return;
+  if(date2&&date2>date1){
+    const d=new Date(date1);const end=new Date(date2);
+    while(d<=end){events.push({id:Date.now()+Math.random(),date:d.toISOString().split('T')[0],title,type});d.setDate(d.getDate()+1)}
+  } else events.push({id:Date.now(),date:date1,title,type});
+  lsave(K.events,events);closeModal();renderCal();pushKey(K.events,'Events');showToast('Event added');
+}
+function saveTeam(){
+  const team=lload(K.team)||[];
+  const m={id:Date.now(),name:document.getElementById('f-name').value.trim(),role:document.getElementById('f-role').value.trim(),num:document.getElementById('f-num').value.trim(),init:document.getElementById('f-init').value.trim().toUpperCase()};
+  if(!m.name)return;
+  team.push(m);lsave(K.team,team);closeModal();renderTeam();pushKey(K.team,'Team');showToast('Team member added');
+}
+function saveRecording(){
+  const recs=lload(K.rec)||[];
+  const r={id:Date.now(),name:document.getElementById('f-name').value.trim(),sub:document.getElementById('f-sub').value.trim(),started:document.getElementById('f-started').value,paid:document.getElementById('f-paid').value==='1'};
+  if(!r.name)return;
+  recs.push(r);lsave(K.rec,recs);closeModal();renderRecordings();pushKey(K.rec,'Recordings');showToast('Recording added');
+}
+function saveItem(key,elId){
+  const items=lload(key)||[];
+  const item={id:Date.now(),text:document.getElementById('f-text').value.trim(),sub:document.getElementById('f-sub').value.trim()};
+  if(!item.text)return;
+  items.push(item);lsave(key,items);closeModal();renderDList(key,elId);
+  const sn=Object.values(SHEETS_MAP).find(v=>v.local===key)?.sheet||'';
+  pushKey(key,sn);showToast('Item saved');
+}
+function saveSocial(){
+  const s={ig:document.getElementById('f-ig').value.trim()||'0',tt:document.getElementById('f-tt').value.trim()||'0',yt:document.getElementById('f-yt').value.trim()||'0',gr:document.getElementById('f-gr').value.trim()||'0'};
+  lsave(K.so,s);closeModal();renderSocial();pushKey(K.so,'Social');showToast('Stats updated');
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+document.getElementById('live-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+initData();
+renderAll();
+setSyncStatus('Local only — click Connect Google Calendar');
+</script>
+</body>
+</html>
