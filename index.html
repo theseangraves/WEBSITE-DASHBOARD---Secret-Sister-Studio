@@ -2,137 +2,125 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Secret Sister Studio</title>
-<link href="https://fonts.googleapis.com/css2?family=Eurostile&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Eurostile:wght@700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#f0ede8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;font-size:13px;color:#1a1a1a;min-height:100vh}
-.euro{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:0.1em;text-transform:uppercase}
-header{background:#fff;border-bottom:1px solid #ddd;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-size:15px;color:#111}
-.hright{display:flex;align-items:center;gap:12px}
-.hdate{font-size:11px;color:#888}
-.sync-status{font-size:10px;color:#aaa}
-
-.wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px;max-width:1600px;margin:0 auto}
-.panel{background:#fff;border:1px solid #ddd;border-radius:6px;overflow:hidden}
+body{background:#f0ede8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;font-size:12px;color:#1a1a1a;min-height:100vh}
+header{background:#fff;border-bottom:1px solid #ddd;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:13px;color:#111}
+.hdate{font-size:10px;color:#888}
+.wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px;max-width:1600px;margin:0 auto}
+.panel{background:#fff;border:1px solid #ddd;border-radius:5px;overflow:hidden}
 .panel.full{grid-column:1/-1}
-.ph{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid #eee;background:#faf9f7}
-.pt{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:10px;color:#555}
-.badd{font-size:11px;font-weight:600;background:#1a1a1a;color:#fff;border:none;border-radius:3px;padding:4px 10px;cursor:pointer;font-family:inherit}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-bottom:1px solid #eee;background:#faf9f7}
+.pt{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-size:10px;color:#444}
+.badd{font-size:10px;font-weight:600;background:#1a1a1a;color:#fff;border:none;border-radius:3px;padding:3px 9px;cursor:pointer;font-family:inherit}
 .badd:hover{background:#333}
-.bsm{font-size:10px;font-weight:500;background:transparent;border:1px solid #ccc;border-radius:3px;padding:2px 7px;cursor:pointer;color:#555;font-family:inherit}
+.bsm{font-size:10px;background:transparent;border:1px solid #ccc;border-radius:3px;padding:2px 6px;cursor:pointer;color:#555;font-family:inherit}
 .bsm:hover{background:#f5f5f5}
 .bdel{color:#b03030;border-color:#e0b0b0}
 
 /* SOCIAL */
 .sgrid{display:grid;grid-template-columns:repeat(4,1fr)}
-.sitem{padding:14px 12px;border-right:1px solid #eee;text-align:center}
+.sitem{padding:10px 8px;border-right:1px solid #eee;text-align:center}
 .sitem:last-child{border-right:none}
-.splat{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin-bottom:6px}
-.snum{font-size:20px;font-weight:700;color:#111;cursor:pointer;border-bottom:1px dashed #ccc;display:inline-block}
+.splat{font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:4px}
+.snum{font-size:18px;font-weight:700;color:#111;cursor:pointer;border-bottom:1px dashed #ccc;display:inline-block}
 .snum:hover{color:#444}
-.slbl{font-size:10px;color:#999;margin-top:3px}
+.slbl{font-size:9px;color:#999;margin-top:2px}
 
 /* DRAG LISTS */
 .dlist{list-style:none}
-.ditem{display:flex;align-items:flex-start;gap:8px;padding:7px 14px;border-bottom:1px solid #f0f0f0;background:#fff}
+.ditem{display:flex;align-items:flex-start;gap:6px;padding:6px 12px;border-bottom:1px solid #f0f0f0;background:#fff}
 .ditem:last-child{border-bottom:none}
 .ditem.dragging{opacity:0.4}
 .ditem.drag-over{border-top:2px solid #1a1a1a}
-.drag-handle{cursor:grab;color:#ccc;font-size:14px;padding-top:1px;flex-shrink:0;user-select:none}
-.drag-handle:active{cursor:grabbing}
-.lnum{min-width:16px;font-size:11px;font-weight:700;color:#bbb;padding-top:1px;flex-shrink:0}
-.ltxt{flex:1;font-size:13px;color:#111;line-height:1.35}
-.lsub{font-size:11px;color:#888;margin-top:1px}
+.drag-handle{cursor:grab;color:#ccc;font-size:12px;padding-top:1px;flex-shrink:0;user-select:none}
+.lnum{min-width:14px;font-size:10px;font-weight:700;color:#bbb;padding-top:1px;flex-shrink:0}
+.ltxt{flex:1;font-size:12px;color:#111;line-height:1.3}
+.lsub{font-size:10px;color:#888;margin-top:1px}
 
-/* CLIENTS */
-.crow{display:grid;grid-template-columns:18px 1fr 58px 80px 70px 36px;gap:7px;align-items:center;padding:7px 14px;border-bottom:1px solid #f0f0f0}
-.crow:hover{background:#faf9f7}
-.crow:last-child{border-bottom:none}
-.chdr{background:#f7f6f4;padding:5px 14px}
-.rank{font-size:11px;color:#aaa;font-weight:700}
-.cname{font-size:13px;font-weight:600;color:#111}
-.csub{font-size:11px;color:#888;margin-top:1px}
-.clbl{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-size:10px;font-weight:700;color:#999;letter-spacing:0.06em;text-transform:uppercase}
-.ubadge{font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px;text-align:center}
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:10px;font-weight:700;color:#999;letter-spacing:0.04em;text-transform:uppercase;padding:5px 10px;text-align:left;background:#f7f6f4;border-bottom:1px solid #eee;white-space:nowrap;cursor:pointer;user-select:none}
+.tbl th:hover{color:#555}
+.tbl th .sort-arrow{margin-left:3px;opacity:0.4;font-size:9px}
+.tbl th.sorted .sort-arrow{opacity:1}
+.tbl td{padding:6px 10px;border-bottom:1px solid #f5f5f5;vertical-align:middle;font-size:12px}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:#faf9f7;cursor:pointer}
+.cname{font-weight:600;color:#111;font-size:12px}
+.csub{font-size:10px;color:#888;margin-top:1px}
+.ubadge{font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;text-align:center;white-space:nowrap;display:inline-block}
 .uhot{background:#fde8e7;color:#992020}
 .uwarm{background:#fef3de;color:#8a5200}
 .ucool{background:#e6f4e6;color:#255525}
-.stag{font-size:10px;padding:2px 5px;border-radius:3px;background:#f0ede8;color:#555;font-weight:600;text-align:center}
-.dtag{font-size:11px;color:#555;font-weight:500}
-.srctag{font-size:11px;font-weight:700;color:#888;text-align:center}
-
-/* RECORDINGS */
-.rec-row{display:grid;grid-template-columns:1fr 80px 60px 28px;gap:8px;align-items:center;padding:7px 14px;border-bottom:1px solid #f0f0f0}
-.rec-row:last-child{border-bottom:none}
-.rec-row.rhdr{background:#f7f6f4;padding:5px 14px}
-.rec-name{font-size:13px;font-weight:600;color:#111}
-.rec-sub{font-size:11px;color:#888;margin-top:1px}
-.rec-date{font-size:11px;color:#555}
-.paid-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
-.paid-yes{background:#e6f4e6;color:#255525}
-.paid-no{background:#fde8e7;color:#992020}
-
-/* TEAM */
-.team-grid{display:grid;grid-template-columns:repeat(3,1fr)}
-.team-card{padding:14px 16px;border-right:1px solid #eee;border-bottom:1px solid #eee}
-.team-card:nth-child(3n){border-right:none}
-.team-name{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-size:13px;font-weight:700;color:#111;letter-spacing:0.04em}
-.team-role{font-size:11px;color:#888;margin-top:3px}
-.team-contact{font-size:11px;color:#555;margin-top:5px;line-height:1.6}
+.stag{font-size:9px;padding:2px 5px;border-radius:3px;background:#f0ede8;color:#555;font-weight:600;white-space:nowrap;display:inline-block}
+.paid-yes{font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;background:#e6f4e6;color:#255525;display:inline-block}
+.paid-no{font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;background:#fde8e7;color:#992020;display:inline-block}
+.tname{font-weight:700;color:#111}
 
 /* CALENDAR */
-.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid #eee}
-.cal-month{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-size:13px;font-weight:700;color:#111;letter-spacing:0.06em}
-.cal-btn{background:none;border:1px solid #ddd;border-radius:3px;padding:3px 10px;cursor:pointer;font-size:12px;color:#555;font-family:inherit}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-bottom:1px solid #eee}
+.cal-month{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-size:12px;font-weight:700;color:#111;letter-spacing:0.06em}
+.cal-btn{background:none;border:1px solid #ddd;border-radius:3px;padding:2px 8px;cursor:pointer;font-size:11px;color:#555}
 .cal-btn:hover{background:#f5f5f5}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);border-left:1px solid #f0f0f0;border-top:1px solid #f0f0f0}
-.cal-day-hdr{padding:5px 0;text-align:center;font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#aaa;border-right:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;background:#faf9f7}
-.cal-cell{min-height:72px;padding:5px 6px;border-right:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0}
+.cal-day-hdr{padding:4px 0;text-align:center;font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#aaa;border-right:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;background:#faf9f7}
+.cal-cell{min-height:58px;padding:4px 5px;border-right:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0}
 .cal-cell.other-month{background:#faf9f7}
-.cal-date{font-size:11px;font-weight:700;color:#aaa;margin-bottom:3px}
-.cal-cell.today .cal-date{background:#1a1a1a;color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px}
-.cal-event{font-size:10px;font-weight:600;padding:2px 5px;border-radius:3px;margin-bottom:2px;line-height:1.3}
+.cal-date{font-size:10px;font-weight:700;color:#bbb;margin-bottom:2px}
+.cal-cell.today .cal-date{background:#1a1a1a;color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px}
+.cal-event{font-size:9px;font-weight:600;padding:1px 4px;border-radius:2px;margin-bottom:1px;line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .ev-studio{background:#1a1a1a;color:#fff}
 .ev-busy{background:#e8e4de;color:#888}
-.cal-legend{display:flex;gap:14px;padding:8px 14px;border-top:1px solid #eee;background:#faf9f7}
-.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:#888}
-.leg-dot{width:10px;height:10px;border-radius:2px}
+.cal-legend{display:flex;gap:12px;padding:5px 12px;border-top:1px solid #eee;background:#faf9f7}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:9px;color:#888}
+.leg-dot{width:8px;height:8px;border-radius:2px}
 
-.empty{padding:16px 14px;text-align:center;font-size:12px;color:#bbb;font-style:italic}
-.modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:flex-start;justify-content:center;padding-top:60px}
+.empty{padding:12px;text-align:center;font-size:11px;color:#bbb;font-style:italic}
+.modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:flex-start;justify-content:center;padding:50px 10px 10px}
 .modal-wrap.on{display:flex}
-.modal{background:#fff;border-radius:8px;padding:20px;width:440px;max-width:95vw;max-height:85vh;overflow-y:auto}
-.modal h2{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-size:11px;color:#666;margin-bottom:14px}
-.fr{margin-bottom:10px}
-.fr label{display:block;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:3px}
+.modal{background:#fff;border-radius:8px;padding:18px;width:100%;max-width:420px;max-height:88vh;overflow-y:auto}
+.modal h2{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-size:10px;color:#666;margin-bottom:12px}
+.fr{margin-bottom:9px}
+.fr label{display:block;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#888;margin-bottom:3px}
 .fr input,.fr select,.fr textarea{font-family:inherit;width:100%;padding:7px 9px;border:1px solid #ccc;border-radius:4px;font-size:13px;color:#111;background:#fff}
-.fr textarea{height:60px;resize:vertical}
-.fr-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fa{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
+.fr textarea{height:55px;resize:vertical}
+.fr-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fa{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
 .bpri{font-family:inherit;font-size:12px;font-weight:600;background:#1a1a1a;color:#fff;border:none;border-radius:4px;padding:7px 16px;cursor:pointer}
 .bcan{font-family:inherit;font-size:12px;font-weight:500;background:transparent;color:#888;border:1px solid #ccc;border-radius:4px;padding:7px 16px;cursor:pointer}
-.toast{position:fixed;bottom:20px;right:20px;background:#1a1a1a;color:#fff;padding:8px 16px;border-radius:4px;font-size:12px;opacity:0;transition:opacity 0.3s;z-index:999;pointer-events:none}
+.toast{position:fixed;bottom:16px;right:16px;background:#1a1a1a;color:#fff;padding:7px 14px;border-radius:4px;font-size:11px;opacity:0;transition:opacity 0.3s;z-index:999;pointer-events:none}
 .toast.show{opacity:1}
+
+@media(max-width:700px){
+  .wrap{grid-template-columns:1fr;gap:8px;padding:8px}
+  .panel.full{grid-column:1}
+  .sgrid{grid-template-columns:repeat(2,1fr)}
+  .sgrid .sitem:nth-child(2){border-right:none}
+  .sgrid .sitem:nth-child(3),.sgrid .sitem:nth-child(4){border-top:1px solid #eee}
+  .sgrid .sitem:nth-child(4){border-right:none}
+  .hide-mobile{display:none}
+  .cal-cell{min-height:40px}
+  header h1{font-size:11px}
+}
 </style>
 </head>
 <body>
 
 <header>
   <h1>Secret Sister Studio</h1>
-  <div class="hright">
-    <span class="sync-status" id="sync-status"></span>
-    <span class="hdate" id="live-date"></span>
-  </div>
+  <span class="hdate" id="live-date"></span>
 </header>
 
 <div class="wrap">
 
   <!-- SOCIAL -->
   <div class="panel full">
-    <div class="ph"><span class="pt">Social Stats</span><span style="font-size:10px;color:#aaa">click to update</span></div>
+    <div class="ph"><span class="pt">Social Stats</span><span style="font-size:9px;color:#aaa">tap to update</span></div>
     <div class="sgrid">
       <div class="sitem"><div class="splat">Instagram</div><div class="snum" onclick="openModal('social')" id="stat-ig">—</div><div class="slbl">@secretsisterstudio</div></div>
       <div class="sitem"><div class="splat">TikTok</div><div class="snum" onclick="openModal('social')" id="stat-tt">—</div><div class="slbl">followers</div></div>
@@ -144,10 +132,10 @@ header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:70
   <!-- RECORDINGS -->
   <div class="panel">
     <div class="ph"><span class="pt">Recordings In Progress</span><button class="badd" onclick="openModal('recording')">+ Add</button></div>
-    <div class="rec-row rhdr">
-      <span class="clbl">Project</span><span class="clbl">Started</span><span class="clbl">Paid</span><span></span>
-    </div>
-    <div id="rec-list"></div>
+    <table class="tbl">
+      <thead><tr><th>Project</th><th class="hide-mobile">Started</th><th>Paid</th><th></th></tr></thead>
+      <tbody id="rec-list"></tbody>
+    </table>
   </div>
 
   <!-- GROWTH -->
@@ -170,16 +158,20 @@ header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:70
 
   <!-- CLIENTS -->
   <div class="panel full">
-    <div class="ph"><span class="pt">Music Clients</span></div>
-    <div class="crow chdr">
-      <span></span>
-      <span class="clbl">Client / Project</span>
-      <span class="clbl">Urgency</span>
-      <span class="clbl">Approx Date</span>
-      <span class="clbl">Status</span>
-      <span class="clbl">Booked By</span>
-    </div>
-    <div id="clients-list"></div>
+    <div class="ph"><span class="pt">Music Clients</span><span style="font-size:9px;color:#aaa">tap column to sort · tap row to edit</span></div>
+    <table class="tbl" id="clients-table">
+      <thead>
+        <tr>
+          <th onclick="sortClients('rank')" id="th-rank"># <span class="sort-arrow">↕</span></th>
+          <th onclick="sortClients('name')" id="th-name">Client / Project <span class="sort-arrow">↕</span></th>
+          <th onclick="sortClients('urgency')" id="th-urgency">Urgency <span class="sort-arrow">↕</span></th>
+          <th onclick="sortClients('approxDate')" id="th-approxDate" class="hide-mobile">Date <span class="sort-arrow">↕</span></th>
+          <th onclick="sortClients('status')" id="th-status">Status <span class="sort-arrow">↕</span></th>
+          <th onclick="sortClients('src')" id="th-src" class="hide-mobile">Booked By <span class="sort-arrow">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="clients-list"></tbody>
+    </table>
   </div>
 
   <!-- CALENDAR -->
@@ -199,8 +191,11 @@ header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:70
 
   <!-- TEAM -->
   <div class="panel full">
-    <div class="ph"><span class="pt">Team</span></div>
-    <div class="team-grid" id="team-grid"></div>
+    <div class="ph"><span class="pt">Team</span><button class="badd" onclick="openModal('team')">+ Add Member</button></div>
+    <table class="tbl">
+      <thead><tr><th>Name</th><th>Role</th><th class="hide-mobile">Phone</th><th>Email</th><th></th></tr></thead>
+      <tbody id="team-list"></tbody>
+    </table>
   </div>
 
 </div>
@@ -211,34 +206,49 @@ header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:70
 <div class="toast" id="toast"></div>
 
 <script>
-const K={cl:'sss_cl',so:'sss_so',growth:'sss_growth',fix:'sss_fix',intern:'sss_intern',project:'sss_project',team:'sss_team',rec:'sss_rec',events:'sss_events'};
+const K={cl:'sss_cl',so:'sss_so',growth:'sss_growth',fix:'sss_fix',intern:'sss_intern',team:'sss_team',rec:'sss_rec',events:'sss_events'};
 function load(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch{return null}}
 function save(k,d){try{localStorage.setItem(k,JSON.stringify(d))}catch{}}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function fmtSocial(n){if(!n||n==='0')return'—';const num=parseInt(String(n).replace(/[^0-9]/g,''));if(isNaN(num)||num===0)return'—';const r=Math.round(num/10)*10;return r>=1000?r.toLocaleString():String(r)}
+function fmtDate(iso){if(!iso)return'—';const p=iso.split('-');if(p.length!==3)return iso;return`${parseInt(p[1])}/${parseInt(p[2])}/${p[0].slice(2)}`}
+function uRank(u){return u==='hot'?0:u==='warm'?1:2}
+function uClass(u){return u==='hot'?'uhot':u==='warm'?'uwarm':'ucool'}
+function uLabel(u){return u==='hot'?'HOT':u==='warm'?'WARM':'COOL'}
+
+let clientSort={col:'urgency',dir:1};
+
+function sortClients(col){
+  if(clientSort.col===col){clientSort.dir*=-1}else{clientSort.col=col;clientSort.dir=1}
+  document.querySelectorAll('.tbl th').forEach(th=>{th.classList.remove('sorted');th.querySelector('.sort-arrow').textContent='↕'});
+  const th=document.getElementById('th-'+col);
+  if(th){th.classList.add('sorted');th.querySelector('.sort-arrow').textContent=clientSort.dir===1?'↓':'↑'}
+  renderClients();
+}
 
 function initData(){
   if(!load(K.cl))save(K.cl,[
     {id:1,name:'The Alley Band',project:'Full Album (2-day)',urgency:'hot',status:'Confirmed',approxDate:'June 4',notes:'Deposit received',src:'SS'},
     {id:2,name:'Marco Diaz',project:'Custom Single',urgency:'warm',status:'Inquiring',approxDate:'Mid June',notes:'',src:'AB'},
-    {id:3,name:'Private Jam Night',project:'Corporate booking',urgency:'warm',status:'Proposal sent',approxDate:'Late June',notes:'8-person group',src:'SS'},
+    {id:3,name:'Private Jam Night',project:'Corporate Booking',urgency:'warm',status:'Proposal Sent',approxDate:'Late June',notes:'8-person group',src:'SS'},
     {id:4,name:'Lena Cruz',project:'Half-Day Session',urgency:'cool',status:'Lead',approxDate:'July',notes:'',src:'AB'},
   ]);
   if(!load(K.so))save(K.so,{ig:'5430',tt:'0',yt:'0',gr:'0'});
   if(!load(K.team))save(K.team,[
-    {id:1,name:'Sean',role:'Owner / Engineer / Producer',email:'seanthegraves@gmail.com',phone:'(626) 476-8642'},
-    {id:2,name:'Alexander',role:'A&R',email:'thealexanderbeys@gmail.com',phone:'+1 (214) 886-4946'},
-    {id:3,name:'Johnny',role:'Development',email:'',phone:'+1 (831) 277-9769'},
-    {id:4,name:'Liam Jones',role:'Producer',email:'',phone:'(818) 292-6443'},
-    {id:5,name:'Jo Peliska',role:'Engineer / Producer',email:'joseph.peliska@gmail.com',phone:'(239) 687-6907'},
+    {id:1,name:'Sean Graves',role:'Owner / Engineer / Producer',phone:'(626) 476-8642',email:'seanthegraves@gmail.com'},
+    {id:2,name:'Alexander Beys',role:'A&R',phone:'+1 (214) 886-4946',email:'thealexanderbeys@gmail.com'},
+    {id:3,name:'Johnny',role:'Development',phone:'+1 (831) 277-9769',email:'ljkeoni@gmail.com'},
+    {id:4,name:'Liam Jones',role:'Producer',phone:'(818) 292-6443',email:''},
+    {id:5,name:'Jo Peliska',role:'Engineer / Producer',phone:'(239) 687-6907',email:'joseph.peliska@gmail.com'},
   ]);
   if(!load(K.rec))save(K.rec,[
     {id:1,name:'The Alley Band — Album',sub:'Live session, 12 tracks',started:'2026-05-15',paid:true},
     {id:2,name:'Suede Silver — EP',sub:'3 songs in progress',started:'2026-04-20',paid:false},
   ]);
   if(!load(K.events))save(K.events,[
-    {id:1,date:'2026-06-04',title:'The Alley Band — Album',type:'studio'},
-    {id:2,date:'2026-06-05',title:'The Alley Band — Album',type:'studio'},
+    {id:1,date:'2026-06-04',title:'The Alley Band',type:'studio'},
+    {id:2,date:'2026-06-05',title:'The Alley Band',type:'studio'},
     {id:3,date:'2026-06-10',title:'Marco Diaz',type:'studio'},
     {id:4,date:'2026-06-14',title:'',type:'busy'},
     {id:5,date:'2026-06-20',title:'Private Jam Night',type:'studio'},
@@ -264,9 +274,8 @@ function initData(){
   ]);
 }
 
-// CALENDAR
 let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
-const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS=['S','M','T','W','T','F','S'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 function shiftMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}renderCal()}
 
@@ -284,35 +293,37 @@ function renderCal(){
     const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===d;
     const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const dayEvents=events.filter(e=>e.date===dateStr);
-    const dateDisp=isToday?`<div class="cal-date" style="background:#1a1a1a;color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px">${d}</div>`:`<div class="cal-date">${d}</div>`;
-    const evHtml=dayEvents.map(e=>e.type==='studio'?`<div class="cal-event ev-studio">${esc(e.title.length>16?e.title.slice(0,14)+'…':e.title)}</div>`:`<div class="cal-event ev-busy">Busy</div>`).join('');
+    const dateDisp=isToday?`<div class="cal-date" style="background:#1a1a1a;color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px">${d}</div>`:`<div class="cal-date">${d}</div>`;
+    const evHtml=dayEvents.map(e=>e.type==='studio'?`<div class="cal-event ev-studio">${esc(e.title.length>12?e.title.slice(0,10)+'…':e.title)}</div>`:`<div class="cal-event ev-busy">Busy</div>`).join('');
     html+=`<div class="cal-cell${isToday?' today':''}">${dateDisp}${evHtml}</div>`;
   }
-  const totalCells=firstDay+daysInMonth;
-  const remaining=(7-totalCells%7)%7;
+  const remaining=(7-(firstDay+daysInMonth)%7)%7;
   for(let i=1;i<=remaining;i++)html+=`<div class="cal-cell other-month"><div class="cal-date">${i}</div></div>`;
   grid.innerHTML=html;
 }
 
-function uClass(u){return u==='hot'?'uhot':u==='warm'?'uwarm':'ucool'}
-function uLabel(u){return u==='hot'?'HOT':u==='warm'?'WARM':'COOL'}
-function fmtSocial(n){if(!n||n==='0')return'—';const num=parseInt(String(n).replace(/[^0-9]/g,''));if(isNaN(num)||num===0)return'—';const r=Math.round(num/10)*10;return r>=1000?r.toLocaleString():String(r)}
-function fmtDate(iso){if(!iso)return'—';const p=iso.split('-');if(p.length!==3)return iso;return`${parseInt(p[1])}/${parseInt(p[2])}/${p[0].slice(2)}`}
-
 function renderClients(){
   const cl=load(K.cl)||[];
-  const s=[...cl].sort((a,b)=>({hot:0,warm:1,cool:2}[a.urgency]||2)-({hot:0,warm:1,cool:2}[b.urgency]||2));
+  const col=clientSort.col;
+  const dir=clientSort.dir;
+  const sorted=[...cl].sort((a,b)=>{
+    if(col==='urgency')return(uRank(a.urgency)-uRank(b.urgency))*dir;
+    if(col==='rank')return(uRank(a.urgency)-uRank(b.urgency));
+    const av=String(a[col]||'').toLowerCase();
+    const bv=String(b[col]||'').toLowerCase();
+    return av<bv?-dir:av>bv?dir:0;
+  }).slice(0,20);
   const el=document.getElementById('clients-list');
-  if(!s.length){el.innerHTML='<div class="empty">No clients — data will populate from email</div>';return}
-  el.innerHTML=s.map((c,i)=>`
-    <div class="crow" onclick="editClient(${c.id})" style="cursor:pointer">
-      <span class="rank">${i+1}</span>
-      <div><div class="cname">${esc(c.name)}</div><div class="csub">${esc(c.project)}</div>${c.notes?`<div class="csub">${esc(c.notes)}</div>`:''}</div>
-      <span class="ubadge ${uClass(c.urgency)}">${uLabel(c.urgency)}</span>
-      <span class="dtag">${esc(c.approxDate||'—')}</span>
-      <span class="stag">${esc(c.status)}</span>
-      <span class="srctag">${esc(c.src||'—')}</span>
-    </div>`).join('');
+  if(!sorted.length){el.innerHTML='<tr><td colspan="6" class="empty">No clients yet — will populate from email</td></tr>';return}
+  el.innerHTML=sorted.map((c,i)=>`
+    <tr onclick="editClient(${c.id})">
+      <td style="color:#bbb;font-weight:700;font-size:10px;width:24px">${i+1}</td>
+      <td><div class="cname">${esc(c.name)}</div><div class="csub">${esc(c.project)}${c.notes?` · ${esc(c.notes)}`:''}</div></td>
+      <td><span class="ubadge ${uClass(c.urgency)}">${uLabel(c.urgency)}</span></td>
+      <td class="hide-mobile" style="font-size:11px;color:#555;white-space:nowrap">${esc(c.approxDate||'—')}</td>
+      <td><span class="stag">${esc(c.status)}</span></td>
+      <td class="hide-mobile" style="font-size:11px;font-weight:700;color:#888">${esc(c.src||'—')}</td>
+    </tr>`).join('');
 }
 
 function renderSocial(){
@@ -322,30 +333,29 @@ function renderSocial(){
 
 function renderTeam(){
   const team=load(K.team)||[];
-  const el=document.getElementById('team-grid');
-  if(!team.length){el.innerHTML='<div class="empty">No team members</div>';return}
+  const el=document.getElementById('team-list');
+  if(!team.length){el.innerHTML='<tr><td colspan="5" class="empty">No team members</td></tr>';return}
   el.innerHTML=team.map(m=>`
-    <div class="team-card">
-      <div class="team-name">${esc(m.name)}</div>
-      <div class="team-role">${esc(m.role)}</div>
-      <div class="team-contact">
-        ${m.phone?`📞 ${esc(m.phone)}<br>`:''}
-        ${m.email?`✉️ ${esc(m.email)}`:''}
-      </div>
-    </div>`).join('');
+    <tr>
+      <td class="tname">${esc(m.name)}</td>
+      <td style="color:#555">${esc(m.role)}</td>
+      <td class="hide-mobile" style="color:#555;white-space:nowrap">${esc(m.phone||'—')}</td>
+      <td style="color:#555;font-size:11px">${m.email?`<a href="mailto:${esc(m.email)}" style="color:#555;text-decoration:none">${esc(m.email)}</a>`:'—'}</td>
+      <td><button class="bsm bdel" onclick="delTeam(event,${m.id})">✕</button></td>
+    </tr>`).join('');
 }
 
 function renderRecordings(){
   const recs=(load(K.rec)||[]).sort((a,b)=>new Date(a.started)-new Date(b.started));
   const el=document.getElementById('rec-list');
-  if(!recs.length){el.innerHTML='<div class="empty">No recordings tracked</div>';return}
+  if(!recs.length){el.innerHTML='<tr><td colspan="4" class="empty">No recordings tracked</td></tr>';return}
   el.innerHTML=recs.map(r=>`
-    <div class="rec-row">
-      <div><div class="rec-name">${esc(r.name)}</div>${r.sub?`<div class="rec-sub">${esc(r.sub)}</div>`:''}</div>
-      <span class="rec-date">${fmtDate(r.started)}</span>
-      <span class="paid-badge ${r.paid?'paid-yes':'paid-no'}">${r.paid?'PAID':'UNPAID'}</span>
-      <button class="bsm bdel" onclick="delRec(event,${r.id})">✕</button>
-    </div>`).join('');
+    <tr>
+      <td><div style="font-weight:600">${esc(r.name)}</div>${r.sub?`<div class="csub">${esc(r.sub)}</div>`:''}</td>
+      <td class="hide-mobile" style="white-space:nowrap;color:#555">${fmtDate(r.started)}</td>
+      <td><span class="${r.paid?'paid-yes':'paid-no'}">${r.paid?'PAID':'UNPAID'}</span></td>
+      <td><button class="bsm bdel" onclick="delRec(event,${r.id})">✕</button></td>
+    </tr>`).join('');
 }
 
 function renderDList(key,elId){
@@ -386,6 +396,7 @@ function attachDrag(ul,key,elId){
   });
 }
 
+function delTeam(e,id){e.stopPropagation();if(!confirm('Remove?'))return;save(K.team,(load(K.team)||[]).filter(x=>x.id!==id));renderTeam()}
 function delRec(e,id){e.stopPropagation();if(!confirm('Remove?'))return;save(K.rec,(load(K.rec)||[]).filter(x=>x.id!==id));renderRecordings()}
 function delItem(e,key,id,elId){e.stopPropagation();if(!confirm('Remove?'))return;save(key,(load(key)||[]).filter(x=>x.id!==id));renderDList(key,elId)}
 function editClient(id){const c=(load(K.cl)||[]).find(x=>x.id===id);if(c)openModal('client',c)}
@@ -400,18 +411,27 @@ function openModal(type,editData=null){
       <div class="fr"><label>Project Type</label><input id="f-proj" value="${esc(c.project||'')}"></div>
       <div class="fr-row">
         <div class="fr"><label>Urgency</label><select id="f-urg">
-          <option value="hot" ${c.urgency==='hot'?'selected':''}>HOT — this week</option>
-          <option value="warm" ${c.urgency==='warm'?'selected':''}>WARM — this month</option>
-          <option value="cool" ${c.urgency==='cool'?'selected':''}>COOL — no rush</option>
+          <option value="hot" ${c.urgency==='hot'?'selected':''}>HOT</option>
+          <option value="warm" ${c.urgency==='warm'?'selected':''}>WARM</option>
+          <option value="cool" ${c.urgency==='cool'?'selected':''}>COOL</option>
         </select></div>
         <div class="fr"><label>Booked By</label><input id="f-src" value="${esc(c.src||'')}" placeholder="e.g. SS, AB"></div>
       </div>
       <div class="fr-row">
-        <div class="fr"><label>Approx Date</label><input id="f-approx" value="${esc(c.approxDate||'')}" placeholder="e.g. Late June, July"></div>
+        <div class="fr"><label>Approx Date</label><input id="f-approx" value="${esc(c.approxDate||'')}" placeholder="e.g. Late June"></div>
         <div class="fr"><label>Status</label><select id="f-stat">${['Lead','Inquiring','Proposal sent','Confirmed','In progress','Invoiced','Complete'].map(s=>`<option ${c.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
       </div>
       <div class="fr"><label>Notes</label><textarea id="f-notes">${esc(c.notes||'')}</textarea></div>
       <div class="fa"><button class="bcan" onclick="closeModal()">Cancel</button><button class="bpri" onclick="saveClient(${c.id||''})">Save</button></div>`;
+  } else if(type==='team'){
+    box.innerHTML=`<h2>Add Team Member</h2>
+      <div class="fr"><label>Full Name</label><input id="f-name"></div>
+      <div class="fr"><label>Role</label><input id="f-role"></div>
+      <div class="fr-row">
+        <div class="fr"><label>Phone</label><input id="f-phone"></div>
+        <div class="fr"><label>Email</label><input id="f-email" type="email"></div>
+      </div>
+      <div class="fa"><button class="bcan" onclick="closeModal()">Cancel</button><button class="bpri" onclick="saveTeam()">Save</button></div>`;
   } else if(type==='recording'){
     box.innerHTML=`<h2>Add Recording</h2>
       <div class="fr"><label>Project Name</label><input id="f-name"></div>
@@ -425,7 +445,7 @@ function openModal(type,editData=null){
     const labels={growth:'Growth Priority',fix:'Fix / Upgrade',intern:'Intern Task'};
     box.innerHTML=`<h2>Add ${labels[type]}</h2>
       <div class="fr"><label>Task</label><input id="f-text"></div>
-      <div class="fr"><label>Context / Notes</label><input id="f-sub"></div>
+      <div class="fr"><label>Notes</label><input id="f-sub"></div>
       <div class="fa"><button class="bcan" onclick="closeModal()">Cancel</button><button class="bpri" onclick="saveItem('${K[type]}','list-${type}')">Save</button></div>`;
   } else if(type==='social'){
     const s=load(K.so)||{};
@@ -448,6 +468,12 @@ function saveClient(id){
   if(id){const i=cl.findIndex(c=>c.id===id);if(i>=0)cl[i]=d;else cl.push(d)}else cl.push(d);
   save(K.cl,cl);closeModal();renderClients();showToast('Client saved');
 }
+function saveTeam(){
+  const team=load(K.team)||[];
+  const m={id:Date.now(),name:document.getElementById('f-name').value.trim(),role:document.getElementById('f-role').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim()};
+  if(!m.name)return;
+  team.push(m);save(K.team,team);closeModal();renderTeam();showToast('Team member added');
+}
 function saveRecording(){
   const recs=load(K.rec)||[];
   const r={id:Date.now(),name:document.getElementById('f-name').value.trim(),sub:document.getElementById('f-sub').value.trim(),started:document.getElementById('f-started').value,paid:document.getElementById('f-paid').value==='1'};
@@ -465,7 +491,7 @@ function saveSocial(){
   save(K.so,s);closeModal();renderSocial();showToast('Stats updated');
 }
 
-document.getElementById('live-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+document.getElementById('live-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 initData();renderAll();
 </script>
 </body>
