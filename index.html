@@ -78,6 +78,8 @@ header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:70
 .ev-studio{background:#1a1a1a;color:#fff}
 .ev-busy{background:#e8e4de;color:#888}
 .cal-legend{display:flex;gap:12px;padding:5px 12px;border-top:1px solid #eee;background:#faf9f7}
+.mobile-agenda{display:none}
+.cal-marker-row{display:none}
 .leg-item{display:flex;align-items:center;gap:4px;font-size:9px;color:#888}
 .leg-dot{width:8px;height:8px;border-radius:2px}
 .empty{padding:12px;text-align:center;font-size:11px;color:#bbb;font-style:italic}
@@ -97,6 +99,8 @@ header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:70
 .toast{position:fixed;bottom:16px;right:16px;background:#1a1a1a;color:#fff;padding:7px 14px;border-radius:4px;font-size:11px;opacity:0;transition:opacity 0.3s;z-index:999;pointer-events:none}
 .toast.show{opacity:1}
 @media(max-width:700px){
+  body{font-size:12px}
+  header{padding:7px 10px}
   .wrap{grid-template-columns:1fr;gap:8px;padding:8px}
   .panel.full{grid-column:1}
   .sgrid{grid-template-columns:repeat(2,1fr)}
@@ -104,8 +108,33 @@ header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:70
   .sgrid .sitem:nth-child(3),.sgrid .sitem:nth-child(4){border-top:1px solid #eee}
   .sgrid .sitem:nth-child(4){border-right:none}
   .hide-mobile{display:none}
-  .cal-cell{min-height:40px}
+  .cal-grid{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .cal-cell{min-height:44px;padding:3px 3px;cursor:pointer}
+  .cal-cell.selected{box-shadow:inset 0 0 0 1px #222;background:#fbfaf8}
+  .cal-event{display:none}
+  .cal-marker-row{display:flex;gap:3px;align-items:center;flex-wrap:wrap;margin-top:4px}
+  .cal-dot{width:5px;height:5px;border-radius:1px;display:inline-block}
+  .cal-dot.studio{background:#1a1a1a}
+  .cal-dot.busy{background:#e3ded6}
+  .cal-count{font-size:8px;color:#999;font-weight:700;margin-left:1px;line-height:1}
+  .mobile-agenda{display:block;padding:9px 12px;border-top:1px solid #eee;background:#fff}
+  .agenda-title{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#444;margin-bottom:5px}
+  .agenda-item{border-top:1px solid #f0f0f0;padding:8px 0;font-size:12px;line-height:1.3}
+  .agenda-item:first-of-type{border-top:none}
+  .agenda-main{font-weight:700;color:#111}
+  .agenda-sub{font-size:10px;color:#888;margin-top:2px}
   header h1{font-size:11px}
+  #team-list,#team-list tr,#team-list td{display:block;width:100%}
+  #team-list tr{padding:10px 10px;border-bottom:1px solid #eee}
+  #team-list td{padding:2px 0;border-bottom:none!important}
+  #team-list td:nth-child(2)::before{content:'ROLE: ';font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.04em}
+  #team-list td:nth-child(3)::before{content:'PHONE: ';font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.04em}
+  #team-list td:nth-child(4)::before{content:'EMAIL: ';font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.04em}
+  #team-list td:last-child{display:flex;gap:7px;padding-top:8px}
+  .tbl thead{display:none}
+  .bsm{min-height:29px;padding:5px 10px}
+  .ditem{padding:10px 10px;gap:7px}
+  .ditem .bedit,.ditem .bdel{align-self:center;flex-shrink:0}
 }
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -141,6 +170,7 @@ header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:70
       <div class="leg-item"><div class="leg-dot ev-studio"></div> Secret Sister details</div>
       <div class="leg-item"><div class="leg-dot ev-busy"></div> Busy only: Sean + Suede Silver</div>
     </div>
+    <div class="mobile-agenda" id="mobile-agenda"></div>
   </div>
 
   <div class="panel full">
@@ -255,10 +285,14 @@ function setCalStatus(s){const el=document.getElementById('cal-status');if(s==='
 function checkForCode(){return handleOAuthCode()}
 function initData(){if(!load(K.cl))save(K.cl,[{id:1,name:'The Alley Band',project:'Full Album (2-day)',urgency:'hot',status:'Confirmed',approxDate:'June 4',notes:'Deposit received',src:'SS'},{id:2,name:'Marco Diaz',project:'Custom Single',urgency:'warm',status:'Inquiring',approxDate:'Mid June',notes:'',src:'AB'},{id:3,name:'Private Jam Night',project:'Corporate Booking',urgency:'warm',status:'Proposal Sent',approxDate:'Late June',notes:'8-person group',src:'SS'},{id:4,name:'Lena Cruz',project:'Half-Day Session',urgency:'cool',status:'Lead',approxDate:'July',notes:'',src:'AB'}]);if(!load(K.so))save(K.so,{ig:'5430',tt:'0',yt:'0',gr:'0'});if(!load(K.team))save(K.team,[{id:1,name:'Studio Owner',role:'Owner / Engineer / Producer',phone:'',email:''},{id:2,name:'A&R Lead',role:'A&R',phone:'',email:''},{id:3,name:'Developer',role:'Development',phone:'',email:''},{id:4,name:'Producer',role:'Producer',phone:'',email:''},{id:5,name:'Engineer',role:'Engineer / Producer',phone:'',email:''}]);if(!load(K.rec))save(K.rec,[{id:1,name:'The Alley Band — Album',sub:'Live session, 12 tracks',started:'2026-05-15',paid:true},{id:2,name:'Suede Silver — EP',sub:'3 songs in progress',started:'2026-04-20',paid:false}]);if(!load(K.events))save(K.events,[{id:1,date:'2026-06-04',title:'The Alley Band',type:'studio'},{id:2,date:'2026-06-05',title:'The Alley Band',type:'studio'},{id:3,date:'2026-06-10',title:'Marco Diaz',type:'studio'},{id:4,date:'2026-06-14',title:'',type:'busy'},{id:5,date:'2026-06-20',title:'Private Jam Night',type:'studio'}]);if(!load(K.growth))save(K.growth,[{id:1,text:'Get Grouped page live + post first jam content',sub:'Subscriber revenue funnel'},{id:2,text:'Close first label / management booking',sub:'Target $1.5K+ single session'},{id:3,text:'Warm Audio brand partnership pitch',sub:'WA-Bus-Comp barter or loan'},{id:4,text:'Drive website bookings from Instagram',sub:'450K reach → 0 conversions is the gap'},{id:5,text:'Get studio insurance in place',sub:'Inland marine + general liability'}]);if(!load(K.fix))save(K.fix,[{id:1,text:'Stereo bus compressor — WA-Bus-Comp',sub:'Biggest missing signal chain piece'},{id:2,text:'Mic preamp — WA273 or API 3124',sub:'Next most impactful analog add'},{id:3,text:'Roland JC-120 reverb repair',sub:'Currently non-functional'},{id:4,text:'Spring Verb DIY — finish build',sub:'Belton BTDR-2H + Accutronics tank'},{id:5,text:'Vintage keyboard — CP-30 or SK-15',sub:'Replace non-functional spinet'}]);if(!load(K.intern))save(K.intern,[{id:1,text:'Edit + upload latest jam night video',sub:'Post within 24hrs of session'},{id:2,text:'Update Grouped page with new content',sub:'Weekly cadence'},{id:3,text:'Pull and log gear serial numbers for insurance',sub:'Photos + spreadsheet'}])}
 let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
+let selectedCalDate=new Date().toISOString().split('T')[0];
 const DAYS=['S','M','T','W','T','F','S'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-function shiftMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}renderCal()}
-function renderCal(){document.getElementById('cal-title').textContent=`${MONTHS[calMonth]} ${calYear}`;const events=load(K.events)||[];const today=new Date();const firstDay=new Date(calYear,calMonth,1).getDay();const daysInMonth=new Date(calYear,calMonth+1,0).getDate();const daysInPrev=new Date(calYear,calMonth,0).getDate();const grid=document.getElementById('cal-grid');let html=DAYS.map(d=>`<div class="cal-day-hdr">${d}</div>`).join('');for(let i=firstDay-1;i>=0;i--)html+=`<div class="cal-cell other-month"><div class="cal-date">${daysInPrev-i}</div></div>`;for(let d=1;d<=daysInMonth;d++){const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===d;const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const dayEvents=events.filter(e=>e.date===dateStr);const dateDisp=`<div class="cal-date">${d}</div>`;const evHtml=dayEvents.map(e=>{const idx=events.findIndex(x=>x.id===e.id);if(e.type==='studio'){const label=e.title.length>18?e.title.slice(0,16)+'…':e.title;return`<div class="cal-event ev-studio clickable" onclick="openCalendarEvent(${idx})">${esc(label)}</div>`}return`<div class="cal-event ev-busy" title="Busy from ${esc(e.calLabel||'connected calendar')}">Busy</div>`}).join('');html+=`<div class="cal-cell${isToday?' today':''}">${dateDisp}${evHtml}</div>`}const remaining=(7-(firstDay+daysInMonth)%7)%7;for(let i=1;i<=remaining;i++)html+=`<div class="cal-cell other-month"><div class="cal-date">${i}</div></div>`;grid.innerHTML=html}
+function shiftMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}renderCal();renderMobileAgenda()}
+function selectCalDate(dateStr){selectedCalDate=dateStr;renderCal();renderMobileAgenda()}
+function markerHtml(dayEvents){if(!dayEvents.length)return'';const hasStudio=dayEvents.some(e=>e.type==='studio');const hasBusy=dayEvents.some(e=>e.type==='busy');return`<div class="cal-marker-row">${hasStudio?'<span class="cal-dot studio"></span>':''}${hasBusy?'<span class="cal-dot busy"></span>':''}${dayEvents.length>1?`<span class="cal-count">${dayEvents.length}</span>`:''}</div>`}
+function renderCal(){document.getElementById('cal-title').textContent=`${MONTHS[calMonth]} ${calYear}`;const events=load(K.events)||[];const today=new Date();const firstDay=new Date(calYear,calMonth,1).getDay();const daysInMonth=new Date(calYear,calMonth+1,0).getDate();const daysInPrev=new Date(calYear,calMonth,0).getDate();const grid=document.getElementById('cal-grid');let html=DAYS.map(d=>`<div class="cal-day-hdr">${d}</div>`).join('');for(let i=firstDay-1;i>=0;i--)html+=`<div class="cal-cell other-month"><div class="cal-date">${daysInPrev-i}</div></div>`;for(let d=1;d<=daysInMonth;d++){const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===d;const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isSelected=selectedCalDate===dateStr;const dayEvents=events.filter(e=>e.date===dateStr);const dateDisp=`<div class="cal-date">${d}</div>`;const evHtml=dayEvents.map(e=>{const idx=events.findIndex(x=>x.id===e.id);if(e.type==='studio'){const label=e.title.length>18?e.title.slice(0,16)+'…':e.title;return`<div class="cal-event ev-studio clickable" onclick="event.stopPropagation();openCalendarEvent(${idx})">${esc(label)}</div>`}return`<div class="cal-event ev-busy" title="Busy from ${esc(e.calLabel||'connected calendar')}">Busy</div>`}).join('');html+=`<div class="cal-cell${isToday?' today':''}${isSelected?' selected':''}" onclick="selectCalDate('${dateStr}')">${dateDisp}${evHtml}${markerHtml(dayEvents)}</div>`}const remaining=(7-(firstDay+daysInMonth)%7)%7;for(let i=1;i<=remaining;i++)html+=`<div class="cal-cell other-month"><div class="cal-date">${i}</div></div>`;grid.innerHTML=html}
+function renderMobileAgenda(){const el=document.getElementById('mobile-agenda');if(!el)return;const events=(load(K.events)||[]).filter(e=>e.date===selectedCalDate);const date=new Date(selectedCalDate+'T00:00:00');const title=date.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});if(!events.length){el.innerHTML=`<div class="agenda-title">${title}</div><div class="agenda-sub">No events</div>`;return}el.innerHTML=`<div class="agenda-title">${title}</div>`+events.map(e=>e.type==='studio'?`<div class="agenda-item clickable" onclick="openCalendarEvent(${(load(K.events)||[]).findIndex(x=>x.id===e.id)})"><div class="agenda-main">${esc(e.title||'Booking')}</div><div class="agenda-sub">${esc(e.when||'Tap for details')}</div></div>`:`<div class="agenda-item"><div class="agenda-main">Busy</div><div class="agenda-sub">${esc(e.calLabel||'connected calendar')}</div></div>`).join('')}
 function openCalendarEvent(index){const ev=(load(K.events)||[])[index];if(!ev||ev.type!=='studio')return;const box=document.getElementById('modal-box');document.getElementById('modal-overlay').classList.add('on');box.innerHTML=`<h2>Studio Booking</h2><div class="cal-detail"><strong>Title</strong>${esc(ev.title||'Booking')}</div><div class="cal-detail"><strong>When</strong>${esc(ev.when||fmtDate(ev.date))}</div>${ev.location?`<div class="cal-detail"><strong>Location</strong>${esc(ev.location)}</div>`:''}${ev.description?`<div class="cal-detail"><strong>Notes</strong>${esc(ev.description).replace(/\n/g,'<br>')}</div>`:'<div class="cal-detail"><strong>Notes</strong>No notes on this event.</div>'}<div class="fa"><button class="bcan" onclick="closeModal()">Close</button></div>`}
 let clientSort={col:'urgency',dir:1};
 function sortClients(col){if(clientSort.col===col){clientSort.dir*=-1}else{clientSort.col=col;clientSort.dir=1}document.querySelectorAll('.tbl th').forEach(th=>{th.classList.remove('sorted');const sa=th.querySelector('.sa');if(sa)sa.textContent='↕'});const th=document.getElementById('th-'+col);if(th){th.classList.add('sorted');th.querySelector('.sa').textContent=clientSort.dir===1?'↓':'↑'}renderClients()}
@@ -268,7 +302,7 @@ function renderTeam(){const team=load(K.team)||[];const canEdit=isEditorAuthenti
 function renderRecordings(){const recs=(load(K.rec)||[]).sort((a,b)=>new Date(a.started)-new Date(b.started));const canEdit=isEditorAuthenticated();const el=document.getElementById('rec-list');if(!recs.length){el.innerHTML='<tr><td colspan="4" class="empty">No recordings tracked</td></tr>';return}el.innerHTML=recs.map(r=>`<tr><td><div style="font-weight:600">${esc(r.name)}</div>${r.sub?`<div class="csub">${esc(r.sub)}</div>`:''}</td><td class="hide-mobile" style="white-space:nowrap;color:#555">${fmtDate(r.started)}</td><td><span class="${r.paid?'paid-yes':'paid-no'}">${r.paid?'PAID':'UNPAID'}</span></td><td><button class="bsm bdel" ${canEdit?'': 'disabled'} onclick="delRec(event,${r.id})">✕</button></td></tr>`).join('')}
 function renderDList(key,elId){const items=load(key)||[];const canEdit=isEditorAuthenticated();const el=document.getElementById(elId);if(!items.length){el.innerHTML='<li class="empty">Nothing here yet</li>';return}el.innerHTML=items.map((item,i)=>`<li class="ditem" draggable="${canEdit?'true':'false'}" data-id="${item.id}" ${canEdit?`ondblclick="editItem('${key}',${item.id},'${elId}')"`:'title="Connect Google to edit"'}><span class="drag-handle">⠿</span><span class="lnum">${i+1}</span><div class="ltxt">${esc(item.text)}${item.sub?`<div class="lsub">${esc(item.sub)}</div>`:''}</div><button class="bsm bedit" ${canEdit?'': 'disabled'} onclick="editItem('${key}',${item.id},'${elId}');event.stopPropagation()">Edit</button><button class="bsm bdel" ${canEdit?'': 'disabled'} onclick="delItem(event,'${key}',${item.id},'${elId}')">✕</button></li>`).join('');if(canEdit)attachDrag(el,key,elId)}
 function updateEditControls(){const canEdit=isEditorAuthenticated();document.querySelectorAll('.badd').forEach(btn=>{btn.disabled=!canEdit;btn.title=canEdit?'':'Connect Google to edit shared dashboard'});document.querySelectorAll('.snum').forEach(el=>{el.title=canEdit?'Update social stats':'Connect Google to update social stats'});updateSyncBar(canEdit?'● Synced with Google Sheets':'Read-only demo — connect Google to edit shared dashboard')}
-function renderAll(){renderCal();renderClients();renderSocial();renderTeam();renderRecordings();renderDList(K.growth,'list-growth');renderDList(K.fix,'list-fix');renderDList(K.intern,'list-intern');updateEditControls()}
+function renderAll(){renderCal();renderMobileAgenda();renderClients();renderSocial();renderTeam();renderRecordings();renderDList(K.growth,'list-growth');renderDList(K.fix,'list-fix');renderDList(K.intern,'list-intern');updateEditControls()}
 let dragSrc=null;
 function attachDrag(ul,key,elId){if(!isEditorAuthenticated())return;ul.querySelectorAll('.ditem').forEach(item=>{item.addEventListener('dragstart',e=>{if(!requireEditor('reorder items'))return;dragSrc=item;e.dataTransfer.effectAllowed='move';setTimeout(()=>item.classList.add('dragging'),0)});item.addEventListener('dragend',()=>{item.classList.remove('dragging');ul.querySelectorAll('.ditem').forEach(i=>i.classList.remove('drag-over'))});item.addEventListener('dragover',e=>{e.preventDefault();ul.querySelectorAll('.ditem').forEach(i=>i.classList.remove('drag-over'));if(item!==dragSrc)item.classList.add('drag-over')});item.addEventListener('drop',e=>{e.preventDefault();if(!dragSrc||dragSrc===item)return;const items=load(key)||[];const si=items.findIndex(x=>x.id===parseInt(dragSrc.dataset.id));const ti=items.findIndex(x=>x.id===parseInt(item.dataset.id));const[moved]=items.splice(si,1);items.splice(ti,0,moved);commitSharedChange(key,items,()=>renderDList(key,elId),'Order updated')})})}
 async function delTeam(e,id){e.stopPropagation();if(!requireEditor('remove team members'))return;if(!confirm('Remove?'))return;const next=(load(K.team)||[]).filter(x=>x.id!==id);await commitSharedChange(K.team,next,renderTeam,'Team member removed')}
