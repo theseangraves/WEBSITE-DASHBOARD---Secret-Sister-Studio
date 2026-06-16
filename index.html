@@ -135,6 +135,8 @@ header h1{font-family:'Eurostile','Arial Narrow',Arial,sans-serif;font-weight:70
   .bsm{min-height:29px;padding:5px 10px}
   .ditem{padding:10px 10px;gap:7px}
   .ditem .bedit,.ditem .bdel{align-self:center;flex-shrink:0}
+  .ditem[data-touch-drag="1"]{background:#f5f4f0;transform:scale(1.02);transition:transform .1s,background .1s}
+  .ditem.drag-over{border-top:2px solid #1a1a1a}
 }
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -292,7 +294,7 @@ function shiftMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++}if(calMo
 function selectCalDate(dateStr){selectedCalDate=dateStr;renderCal();renderMobileAgenda()}
 function markerHtml(dayEvents){if(!dayEvents.length)return'';const hasStudio=dayEvents.some(e=>e.type==='studio');const hasBusy=dayEvents.some(e=>e.type==='busy');return`<div class="cal-marker-row">${hasStudio?'<span class="cal-dot studio"></span>':''}${hasBusy?'<span class="cal-dot busy"></span>':''}${dayEvents.length>1?`<span class="cal-count">${dayEvents.length}</span>`:''}</div>`}
 function renderCal(){document.getElementById('cal-title').textContent=`${MONTHS[calMonth]} ${calYear}`;const events=load(K.events)||[];const today=new Date();const firstDay=new Date(calYear,calMonth,1).getDay();const daysInMonth=new Date(calYear,calMonth+1,0).getDate();const daysInPrev=new Date(calYear,calMonth,0).getDate();const grid=document.getElementById('cal-grid');let html=DAYS.map(d=>`<div class="cal-day-hdr">${d}</div>`).join('');for(let i=firstDay-1;i>=0;i--)html+=`<div class="cal-cell other-month"><div class="cal-date">${daysInPrev-i}</div></div>`;for(let d=1;d<=daysInMonth;d++){const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===d;const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isSelected=selectedCalDate===dateStr;const dayEvents=events.filter(e=>e.date===dateStr);const dateDisp=`<div class="cal-date">${d}</div>`;const evHtml=dayEvents.map(e=>{const idx=events.findIndex(x=>x.id===e.id);if(e.type==='studio'){const label=e.title.length>18?e.title.slice(0,16)+'…':e.title;return`<div class="cal-event ev-studio clickable" onclick="event.stopPropagation();openCalendarEvent(${idx})">${esc(label)}</div>`}return`<div class="cal-event ev-busy" title="Busy from ${esc(e.calLabel||'connected calendar')}">Busy</div>`}).join('');html+=`<div class="cal-cell${isToday?' today':''}${isSelected?' selected':''}" onclick="selectCalDate('${dateStr}')">${dateDisp}${evHtml}${markerHtml(dayEvents)}</div>`}const remaining=(7-(firstDay+daysInMonth)%7)%7;for(let i=1;i<=remaining;i++)html+=`<div class="cal-cell other-month"><div class="cal-date">${i}</div></div>`;grid.innerHTML=html}
-function renderMobileAgenda(){const el=document.getElementById('mobile-agenda');if(!el)return;const events=(load(K.events)||[]).filter(e=>e.date===selectedCalDate);const date=new Date(selectedCalDate+'T00:00:00');const title=date.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});if(!events.length){el.innerHTML=`<div class="agenda-title">${title}</div><div class="agenda-sub">No events</div>`;return}el.innerHTML=`<div class="agenda-title">${title}</div>`+events.map(e=>e.type==='studio'?`<div class="agenda-item clickable" onclick="openCalendarEvent(${(load(K.events)||[]).findIndex(x=>x.id===e.id)})"><div class="agenda-main">${esc(e.title||'Booking')}</div><div class="agenda-sub">${esc(e.when||'Tap for details')}</div></div>`:`<div class="agenda-item"><div class="agenda-main">Busy</div><div class="agenda-sub">${esc(e.calLabel||'connected calendar')}</div></div>`).join('')}
+function renderMobileAgenda(){const el=document.getElementById('mobile-agenda');if(!el)return;const events=(load(K.events)||[]).filter(e=>e.date===selectedCalDate);const date=new Date(selectedCalDate+'T00:00:00');const title=date.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});if(!events.length){el.innerHTML=`<div class="agenda-title">${title}</div><div class="agenda-sub">No events</div>`;return}el.innerHTML=`<div class="agenda-title">${title}</div>`+events.map(e=>e.type==='studio'?`<div class="agenda-item clickable" onclick="openCalendarEvent(${(load(K.events)||[]).findIndex(x=>x.id===e.id)})"><div class="agenda-main">${esc(e.title||'Booking')}</div><div class="agenda-sub">${esc(e.when||'Tap for details')}</div></div>`:`<div class="agenda-item"><div class="agenda-main">Busy</div><div class="agenda-sub">${e.when?`${esc(e.when)} • ${esc(e.calLabel)}`:esc(e.calLabel||'connected calendar')}</div></div>`).join('')}
 function openCalendarEvent(index){const ev=(load(K.events)||[])[index];if(!ev||ev.type!=='studio')return;const box=document.getElementById('modal-box');document.getElementById('modal-overlay').classList.add('on');box.innerHTML=`<h2>Studio Booking</h2><div class="cal-detail"><strong>Title</strong>${esc(ev.title||'Booking')}</div><div class="cal-detail"><strong>When</strong>${esc(ev.when||fmtDate(ev.date))}</div>${ev.location?`<div class="cal-detail"><strong>Location</strong>${esc(ev.location)}</div>`:''}${ev.description?`<div class="cal-detail"><strong>Notes</strong>${esc(ev.description).replace(/\n/g,'<br>')}</div>`:'<div class="cal-detail"><strong>Notes</strong>No notes on this event.</div>'}<div class="fa"><button class="bcan" onclick="closeModal()">Close</button></div>`}
 let clientSort={col:'urgency',dir:1};
 function sortClients(col){if(clientSort.col===col){clientSort.dir*=-1}else{clientSort.col=col;clientSort.dir=1}document.querySelectorAll('.tbl th').forEach(th=>{th.classList.remove('sorted');const sa=th.querySelector('.sa');if(sa)sa.textContent='↕'});const th=document.getElementById('th-'+col);if(th){th.classList.add('sorted');th.querySelector('.sa').textContent=clientSort.dir===1?'↓':'↑'}renderClients()}
@@ -304,7 +306,72 @@ function renderDList(key,elId){const items=load(key)||[];const canEdit=isEditorA
 function updateEditControls(){const canEdit=isEditorAuthenticated();document.querySelectorAll('.badd').forEach(btn=>{btn.disabled=!canEdit;btn.title=canEdit?'':'Connect Google to edit shared dashboard'});document.querySelectorAll('.snum').forEach(el=>{el.title=canEdit?'Update social stats':'Connect Google to update social stats'});updateSyncBar(canEdit?'● Synced with Google Sheets':'Read-only demo — connect Google to edit shared dashboard')}
 function renderAll(){renderCal();renderMobileAgenda();renderClients();renderSocial();renderTeam();renderRecordings();renderDList(K.growth,'list-growth');renderDList(K.fix,'list-fix');renderDList(K.intern,'list-intern');updateEditControls()}
 let dragSrc=null;
-function attachDrag(ul,key,elId){if(!isEditorAuthenticated())return;ul.querySelectorAll('.ditem').forEach(item=>{item.addEventListener('dragstart',e=>{if(!requireEditor('reorder items'))return;dragSrc=item;e.dataTransfer.effectAllowed='move';setTimeout(()=>item.classList.add('dragging'),0)});item.addEventListener('dragend',()=>{item.classList.remove('dragging');ul.querySelectorAll('.ditem').forEach(i=>i.classList.remove('drag-over'))});item.addEventListener('dragover',e=>{e.preventDefault();ul.querySelectorAll('.ditem').forEach(i=>i.classList.remove('drag-over'));if(item!==dragSrc)item.classList.add('drag-over')});item.addEventListener('drop',e=>{e.preventDefault();if(!dragSrc||dragSrc===item)return;const items=load(key)||[];const si=items.findIndex(x=>x.id===parseInt(dragSrc.dataset.id));const ti=items.findIndex(x=>x.id===parseInt(item.dataset.id));const[moved]=items.splice(si,1);items.splice(ti,0,moved);commitSharedChange(key,items,()=>renderDList(key,elId),'Order updated')})})}
+function attachDrag(ul,key,elId){
+  if(!isEditorAuthenticated())return;
+  let touchTimer=null,touchSrc=null;
+  ul.querySelectorAll('.ditem').forEach(item=>{
+    item.addEventListener('dragstart',function(e){
+      if(!requireEditor('reorder items'))return;
+      dragSrc=item;
+      e.dataTransfer.effectAllowed='move';
+      setTimeout(function(){item.classList.add('dragging')},0)
+    });
+    item.addEventListener('dragend',function(){
+      item.classList.remove('dragging');
+      ul.querySelectorAll('.ditem').forEach(function(i){i.classList.remove('drag-over')})
+    });
+    item.addEventListener('dragover',function(e){
+      e.preventDefault();
+      ul.querySelectorAll('.ditem').forEach(function(i){i.classList.remove('drag-over')});
+      if(item!==dragSrc)item.classList.add('drag-over')
+    });
+    item.addEventListener('drop',function(e){
+      e.preventDefault();
+      if(!dragSrc||dragSrc===item)return;
+      const items=load(key)||[];
+      const si=items.findIndex(function(x){return x.id===parseInt(dragSrc.dataset.id)});
+      const ti=items.findIndex(function(x){return x.id===parseInt(item.dataset.id)});
+      const moved=items.splice(si,1)[0];
+      items.splice(ti,0,moved);
+      commitSharedChange(key,items,function(){renderDList(key,elId)},'Order updated')
+    });
+    item.addEventListener('touchstart',function(e){
+      clearTimeout(touchTimer);
+      touchTimer=setTimeout(function(){
+        touchSrc=item;
+        item.classList.add('dragging');
+        item.setAttribute('data-touch-drag','1')
+      },300)
+    });
+    item.addEventListener('touchend',function(e){
+      clearTimeout(touchTimer);
+      if(touchSrc){
+        touchSrc.classList.remove('dragging');
+        touchSrc.removeAttribute('data-touch-drag');
+        touchSrc=null
+      }
+    });
+    item.addEventListener('touchmove',function(e){
+      if(!touchSrc)return;
+      e.preventDefault();
+      const touch=e.touches[0];
+      const target=document.elementFromPoint(touch.clientX,touch.clientY);
+      const dropTarget=target?target.closest('.ditem'):null;
+      if(dropTarget&&dropTarget!==touchSrc){
+        ul.querySelectorAll('.ditem').forEach(function(i){i.classList.remove('drag-over')});
+        dropTarget.classList.add('drag-over');
+        const items=load(key)||[];
+        const si=items.findIndex(function(x){return x.id===parseInt(touchSrc.dataset.id)});
+        const ti=items.findIndex(function(x){return x.id===parseInt(dropTarget.dataset.id)});
+        const moved=items.splice(si,1)[0];
+        items.splice(ti,0,moved);
+        commitSharedChange(key,items,function(){renderDList(key,elId)},'Order updated');
+        touchSrc=dropTarget;
+        dropTarget.classList.add('dragging')
+      }
+    });
+  })
+}
 async function delTeam(e,id){e.stopPropagation();if(!requireEditor('remove team members'))return;if(!confirm('Remove?'))return;const next=(load(K.team)||[]).filter(x=>x.id!==id);await commitSharedChange(K.team,next,renderTeam,'Team member removed')}
 async function delRec(e,id){e.stopPropagation();if(!requireEditor('remove recordings'))return;if(!confirm('Remove?'))return;const next=(load(K.rec)||[]).filter(x=>x.id!==id);await commitSharedChange(K.rec,next,renderRecordings,'Recording removed')}
 async function delItem(e,key,id,elId){e.stopPropagation();if(!requireEditor('remove tasks'))return;if(!confirm('Remove?'))return;const next=(load(key)||[]).filter(x=>x.id!==id);await commitSharedChange(key,next,()=>renderDList(key,elId),'Task removed')}
